@@ -3,8 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 from django.utils.translation import gettext_lazy as _
 
-from .managers import TeacherManager, StudentManager
-
 
 class User(AbstractUser):
     registration_number = models.CharField(
@@ -41,51 +39,23 @@ class Profile(models.Model):
     modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
-        db_table = 'profile'
+        abstract = True
 
 
-class Teacher(Profile):
-    objects = TeacherManager()
-
-    class Meta:
-        proxy = True
-
-
-class Student(Profile):
-    objects = StudentManager()
-
-    class Meta:
-        proxy = True
-
-
-class Address(models.Model):
-    state = models.CharField(_('state'), max_length=2)
-    city = models.CharField(_('city'), max_length=100)
-    street = models.CharField(_('street'), max_length=250)
-    neighborhood = models.CharField(_('neighborhood'), max_length=100)
-    number = models.IntegerField(_('number'))
-    postal_code = models.CharField(_('postal_code'), max_length=250)
-    complement = models.CharField(
-        _('complement'),
-        max_length=250,
-        blank=True,
-        null=True
-    )
-    profile = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name='addresses'
-    )
+class Institution(models.Model):
+    name = models.CharField(_('name'), max_length=250)
+    description = models.TextField(_('description'), blank=True, null=True)
     created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
     modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
 
     class Meta:
-        db_table = 'address'
+        db_table = 'institution'
 
 
 class Program(models.Model):
     name = models.CharField(_('name'), max_length=200)
     description = models.TextField(_('description'), blank=True, null=True)
+    institution = models.OneToOneField(Institution, on_delete=models.CASCADE)
     created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
     modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
 
@@ -108,16 +78,57 @@ class Class(models.Model):
         db_table = 'class'
 
 
+class Teacher(Profile):
+    class Meta:
+        db_table = 'teacher'
+
+
+class Student(Profile):
+    class_id = models.ForeignKey(
+        Class,
+        on_delete=models.CASCADE,
+        related_name="students"
+    )
+
+    class Meta:
+        db_table = 'student'
+
+
+class Address(models.Model):
+    state = models.CharField(_('state'), max_length=2)
+    city = models.CharField(_('city'), max_length=100)
+    street = models.CharField(_('street'), max_length=250)
+    neighborhood = models.CharField(_('neighborhood'), max_length=100)
+    number = models.IntegerField(_('number'))
+    postal_code = models.CharField(_('postal_code'), max_length=250)
+    complement = models.CharField(
+        _('complement'),
+        max_length=250,
+        blank=True,
+        null=True
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='addresses'
+    )
+    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+
+    class Meta:
+        db_table = 'address'
+
+
 class Course(models.Model):
     name = models.CharField(_('name'), max_length=200)
     description = models.TextField(_('description'), blank=True, null=True)
-    class_ref = models.ForeignKey(
+    class_id = models.ForeignKey(
         Class,
         on_delete=models.CASCADE,
         related_name="courses"
     )
     teacher = models.ForeignKey(
-        Profile,
+        Teacher,
         on_delete=models.CASCADE,
         related_name="courses"
     )
