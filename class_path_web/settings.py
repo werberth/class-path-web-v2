@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'class_path_web.accounts',
+    'class_path_web.location',
     'class_path_web.core'
 ]
 

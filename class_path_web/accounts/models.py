@@ -204,21 +204,6 @@ class Course(models.Model):
         return self.name
 
 
-class Location(models.Model):
-    name = models.CharField(max_length=250)
-    description = models.TextField(blank=True, null=True)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    create_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'location'
-
-    def __str__(self):
-        return f'{self.name}: {self.latitude}, {self.longitude}'
-
-
 class Content(models.Model):
     title = models.CharField(max_length=250)
     description = models.CharField(max_length=250)
