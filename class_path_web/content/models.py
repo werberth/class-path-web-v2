@@ -64,6 +64,7 @@ def upload_file_path(instance, filename):
     
     return f'{hash_file_name}.{ext}'
 
+
 class ActivityAnswer(models.Model):
     TYPE_IMAGE = 'image'
     TYPE_AUDIO = 'audio'
