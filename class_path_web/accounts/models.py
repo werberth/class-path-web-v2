@@ -39,12 +39,6 @@ class Profile(models.Model):
         null=True,
         blank=True
     )
-    full_name = models.CharField(
-        _('full name'),
-        max_length=250,
-        blank=True,
-        null=True
-    )
     description = models.TextField(_('description'), blank=True, null=True)
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
     modified_at = models.DateTimeField(_('modified at'), auto_now=True)
@@ -113,6 +107,9 @@ class Admin(Profile):
         related_name="admins",
         null=True,
     )
+    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+
     class Meta:
         db_table = 'admin'
 
@@ -128,6 +125,9 @@ class Teacher(Profile):
         on_delete=models.CASCADE,
         related_name="teachers"
     )
+    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+
     class Meta:
         db_table = 'teacher'
 
@@ -143,6 +143,8 @@ class Student(Profile):
         on_delete=models.CASCADE,
         related_name="students"
     )
+    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
 
     class Meta:
         db_table = 'student'
@@ -186,11 +188,6 @@ class Course(models.Model):
     )
     teacher = models.ForeignKey(
         Teacher,
-        on_delete=models.CASCADE,
-        related_name="courses"
-    )
-    program = models.ForeignKey(
-        Program,
         on_delete=models.CASCADE,
         related_name="courses"
     )
