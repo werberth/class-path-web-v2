@@ -5,12 +5,34 @@
 <link href="{% static 'styles/home.css' %}" rel="stylesheet">
 {% endblock styles %}
 
+{% block body-attr %} class="text-center" {% endblock %}
+
 {% block content %}
-  <main role="main" class="inner cover">
-    <h2 class="cover-heading">Registre-se</h2>
-    <p>Com o Class Path é muito fácil gerenciar uma instituição de ensino, suas turmas, disciplinas e criar conteúdos sensíveis ao contexto.</p>
-    <p>
-      <a href="#" class="btn btn-lg btn-secondary">Criar Instituição</a>
-    </p>
-  </main>
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <header class="home-page-header mb-auto">
+        <div class="inner">
+          <h4 class="home-page-brand">
+            <img src="{% static 'media/icon.png' %}">
+            <span>Class Path</span>
+          </h3>
+          <nav class="nav home-page-nav justify-content-center">
+            <a class="nav-link active" href="#">Login</a>
+          </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <h2 class="cover-heading">Registre-se</h2>
+        <p>Com o Class Path é muito fácil gerenciar uma instituição de ensino, suas turmas, disciplinas e criar conteúdos sensíveis ao contexto.</p>
+        <p>
+          <a href="{% url 'accounts:sign-up' %}" class="btn btn-lg btn-secondary">Criar Instituição</a>
+        </p>
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+            © <a href="https://github.com/werberth">Betim</a> – Built with Django 2 and Bootstrap 4
+        </div>
+      </footer>
+    </div>
 {% endblock content %}
