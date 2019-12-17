@@ -37,6 +37,13 @@ class CustomUserManager(UserManager):
                 content_type=content_type,
             )
             instance.user_permissions.add(permission_is_teacher.id)
+        elif instance.is_admin:
+            permission_is_admin, _ = Permission.objects.get_or_create(
+                codename='is_admin',
+                name='Is Admin',
+                content_type=content_type,
+            )
+            instance.user_permissions.add(permission_is_admin.id)
     
     def _create_user(self, registration_number, email, password, **extra_fields):
         """
