@@ -1,4 +1,4 @@
-/* 
+/*
 
 primary blue: #2185ff
 secundary blue: #4483ce
@@ -6,7 +6,7 @@ secundary blue: #4483ce
 primary grey: #4b4b4b
 
 */
-/* 
+/*
 
 primary blue: #2185ff
 secundary blue: #4483ce
@@ -57,7 +57,7 @@ body {
 
 .cover .cover-heading {
   color: #2185ff;
-} 
+}
 
 .cover p {
   font-size: 18px;
@@ -76,7 +76,7 @@ body {
     background-color: transparent;
     border-bottom: .25rem solid transparent;
   }
-  
+
 .home-page-nav .nav-link:hover,
 .home-page-nav .nav-link:focus {
     border-bottom-color: #fff;
@@ -130,7 +130,7 @@ body {
     color: #2185ff;
     border-bottom-color: #4483ce;
 }
-  
+
 @media only screen and (max-width: 600px) {
     .home-page-brand span {
         display: none;

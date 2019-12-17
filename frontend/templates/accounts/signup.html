@@ -1,0 +1,100 @@
+{% extends "base_offline.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'styles/signup.css' %}" rel="stylesheet">
+{% endblock styles %}
+
+{% block content %}
+  <div id="signup-container" class="container">
+    <div class="py-5 text-center">
+      <a href="{% url 'core:home' %}" title="Voltar a Pagina Inicial">
+        <img class="d-block mx-auto mb-4" src="{% static 'media/icon.png' %}" alt="" width="72" height="72">
+      </a>
+      <h2>Sign Up</h2>
+    </div>
+
+    <div class="col-md-6 offset-md-3">
+      <form action="" method="POST">
+        {% csrf_token %}
+
+        <h4 class="mb-3">Informações da Instituição</h4>
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.name.id }}">{{ institution_form.name.label }}</label>
+            {% render_field institution_form.name class="form-control" %}
+            <span class="text-danger">{{ institution_form.name.errors|striptags }}</span>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.description.id }}">{{ institution_form.description.label }}</label>
+            {% render_field institution_form.description class="form-control" %}
+            <span class="text-danger">{{ institution_form.description.errors|striptags }}</span>
+          </div>
+        </div>
+
+        <br>
+
+        <h4 class="mb-3">Informações de Usuario Administrador</h4>
+
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.registration_number.id }}">Username/Registration Number</label>
+            {% render_field user_form.registration_number class="form-control" %}
+            <span class="text-danger">{{ user_form.registration_number.errors|striptags }}</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.email.id }}">{{ user_form.email.label }}</label>
+            {% render_field user_form.email class="form-control" %}
+            <span class="text-danger">{{ user_form.email.errors|striptags }}</span>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.first_name.id }}">{{ user_form.first_name.label }}</label>
+            {% render_field user_form.first_name class="form-control" required="required" %}
+            <span class="text-danger">{{ user_form.first_name.errors|striptags }}</span>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.last_name.id }}">{{ user_form.last_name.label }}</label>
+            {% render_field user_form.last_name class="form-control" required="required" %}
+            <span class="text-danger">{{ user_form.last_name.errors|striptags }}</span>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.password1.id }}">{{ user_form.password1.label }}</label>
+            {% render_field user_form.password1 class="form-control" %}
+            <span class="text-danger">{{ user_form.password1.errors|striptags }}</span>
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="form-group">
+            <label for="{{ user_form.password2.id }}">{{ user_form.password2.label }}</label>
+            {% render_field user_form.password2 class="form-control" %}
+            <span class="text-danger">{{ user_form.password2.errors|striptags }}</span>
+          </div>
+        </div>
+
+            <div class="form-group align-bottom">
+                <a id="back" href="{% url 'core:home' %}" class="btn btn-md btn-secondary col-md-5 col-sm-12">Voltar</a>
+                <button id="signup" class="btn btn-md btn-block col-md-5 col-sm-12" type="submit">Sign Up</button>
+            </div>
+      </form>
+    </div>
+  </div>
+
+
+  <footer class="mastfoot mt-auto">
+    <div class="inner">
+        © <a href="https://github.com/werberth">Betim</a> – Built with Django 2 and Bootstrap 4
+    </div>
+  </footer>
+{% endblock content %}
