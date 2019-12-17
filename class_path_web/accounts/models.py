@@ -17,7 +17,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     is_teacher = models.BooleanField(_('is teacher'), default=False)
     is_student = models.BooleanField(_('is student'), default=False)
-
+    is_admin = models.BooleanField(_('is_admin'), default=True)
     objects = CustomUserManager()
 
     username = None
@@ -53,8 +53,8 @@ class Profile(models.Model):
 class Institution(models.Model):
     name = models.CharField(_('name'), max_length=250)
     description = models.TextField(_('description'), blank=True, null=True)
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'institution'
@@ -67,8 +67,8 @@ class Program(models.Model):
     name = models.CharField(_('name'), max_length=200)
     description = models.TextField(_('description'), blank=True, null=True)
     institution = models.OneToOneField(Institution, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'program'
@@ -85,8 +85,8 @@ class Class(models.Model):
         on_delete=models.CASCADE,
         related_name="classes"
     )
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'class'
@@ -107,8 +107,8 @@ class Admin(Profile):
         related_name="admins",
         null=True,
     )
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'admin'
@@ -125,8 +125,8 @@ class Teacher(Profile):
         on_delete=models.CASCADE,
         related_name="teachers"
     )
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'teacher'
@@ -143,8 +143,8 @@ class Student(Profile):
         on_delete=models.CASCADE,
         related_name="students"
     )
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'student'
@@ -156,7 +156,7 @@ class Address(models.Model):
     street = models.CharField(_('street'), max_length=250)
     neighborhood = models.CharField(_('neighborhood'), max_length=100)
     number = models.IntegerField(_('number'))
-    postal_code = models.CharField(_('postal_code'), max_length=250)
+    postal_code = models.CharField(_('postal code'), max_length=250)
     complement = models.CharField(
         _('complement'),
         max_length=250,
@@ -168,8 +168,8 @@ class Address(models.Model):
         on_delete=models.CASCADE,
         related_name='addresses'
     )
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'address'
@@ -191,8 +191,8 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         related_name="courses"
     )
-    created_at = models.DateTimeField(_('created_at'), auto_now_add=True)
-    modified_at = models.DateTimeField(_('modified_at'), auto_now=True)
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
     class Meta:
         db_table = 'course'
