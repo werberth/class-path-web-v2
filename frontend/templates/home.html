@@ -1,13 +1,25 @@
-{% extends "base_offline.html" %}
 {% load static %}
 
-{% block styles %}
-<link href="{% static 'styles/home.css' %}" rel="stylesheet">
-{% endblock styles %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-{% block body-attr %} class="text-center" {% endblock %}
+    <title>Class Path {% block title %} | Home {% endblock %}</title>
 
-{% block content %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'styles/main.css' %}" rel="stylesheet">
+    <link href="{% static 'styles/home.css' %}" rel="stylesheet">
+
+  </head>
+  <body class="text-center">
+
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
       <header class="home-page-header mb-auto">
         <div class="inner">
@@ -35,4 +47,12 @@
         </div>
       </footer>
     </div>
-{% endblock content %}
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'jquery/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block scripts %} {% endblock scripts %}
+  </body>
+</html>

@@ -3,98 +3,121 @@
 {% load static %}
 
 {% block styles %}
-<link href="{% static 'styles/signup.css' %}" rel="stylesheet">
-{% endblock styles %}
+  <link href="{% static 'styles/signup.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-  <div id="signup-container" class="container">
-    <div class="py-5 text-center">
-      <a href="{% url 'core:home' %}" title="Voltar a Pagina Inicial">
-        <img class="d-block mx-auto mb-4" src="{% static 'media/icon.png' %}" alt="" width="72" height="72">
-      </a>
-      <h2>Sign Up</h2>
-    </div>
-
-    <div class="col-md-6 offset-md-3">
-      <form action="" method="POST">
-        {% csrf_token %}
-
-        <h4 class="mb-3">Informações da Instituição</h4>
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.name.id }}">{{ institution_form.name.label }}</label>
-            {% render_field institution_form.name class="form-control" %}
-            <span class="text-danger">{{ institution_form.name.errors|striptags }}</span>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.description.id }}">{{ institution_form.description.label }}</label>
-            {% render_field institution_form.description class="form-control" %}
-            <span class="text-danger">{{ institution_form.description.errors|striptags }}</span>
-          </div>
-        </div>
-
-        <br>
-
-        <h4 class="mb-3">Informações de Usuario Administrador</h4>
-
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.registration_number.id }}">Username/Registration Number</label>
-            {% render_field user_form.registration_number class="form-control" %}
-            <span class="text-danger">{{ user_form.registration_number.errors|striptags }}</span>
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.email.id }}">{{ user_form.email.label }}</label>
-            {% render_field user_form.email class="form-control" %}
-            <span class="text-danger">{{ user_form.email.errors|striptags }}</span>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.first_name.id }}">{{ user_form.first_name.label }}</label>
-            {% render_field user_form.first_name class="form-control" required="required" %}
-            <span class="text-danger">{{ user_form.first_name.errors|striptags }}</span>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.last_name.id }}">{{ user_form.last_name.label }}</label>
-            {% render_field user_form.last_name class="form-control" required="required" %}
-            <span class="text-danger">{{ user_form.last_name.errors|striptags }}</span>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.password1.id }}">{{ user_form.password1.label }}</label>
-            {% render_field user_form.password1 class="form-control" %}
-            <span class="text-danger">{{ user_form.password1.errors|striptags }}</span>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="form-group">
-            <label for="{{ user_form.password2.id }}">{{ user_form.password2.label }}</label>
-            {% render_field user_form.password2 class="form-control" %}
-            <span class="text-danger">{{ user_form.password2.errors|striptags }}</span>
-          </div>
-        </div>
-
-            <div class="form-group align-bottom">
-                <a id="back" href="{% url 'core:home' %}" class="btn btn-md btn-secondary col-md-5 col-sm-12">Voltar</a>
-                <button id="signup" class="btn btn-md btn-block col-md-5 col-sm-12" type="submit">Sign Up</button>
+  <div class="card o-hidden border-0 shadow-lg my-5">
+    <div class="card-body p-0">
+      <div class="row">
+        <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+        <div class="col-lg-7">
+          <div class="p-5">
+            <div class="text-center">
+              <h1 class="h4 text-gray-900 mb-4">Junte-se a nós!</h1>
             </div>
-      </form>
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div class="text-center form-header">
+                <h4>Informações da Instituição</h4>
+              </div>
+              <div class="form-group">
+                {% if institution_form.name.errors %}
+                  {% render_field institution_form.name class="form-control form-control-user is-invalid" placeholder=institution_form.name.label %}
+                  {{ institution_form.name.errors|striptags }}
+                {% else %}
+                  {% render_field institution_form.name class="form-control form-control-user" placeholder=institution_form.name.label %}
+                {% endif %}
+              </div>
+              <div class="form-group">
+                {% if institution_form.description.errors %}
+                  {% render_field institution_form.description class="form-control is-invalid" placeholder=institution_form.description.label %}
+                  {{ institution_form.description.errors|striptags }}
+                {% else %}
+                  {% render_field institution_form.description class="form-control" placeholder=institution_form.description.label %}
+                {% endif %}
+              </div>
+              <div class="text-center form-header">
+                <h4>Informações do Usuário</h4>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  {% if user_form.registration_number.errors %}
+                    {% render_field user_form.registration_number class="form-control form-control-user is-invalid" placeholder=user_form.registration_number.label %}
+                    {{ user_form.registration_number.errors|striptags }}
+                  {% else %}
+                    {% render_field user_form.registration_number class="form-control form-control-user" placeholder=user_form.registration_number.label %}
+                  {% endif %}
+                </div>
+                <div class="col-sm-6">
+                  {% if user_form.email.errors %}
+                    {% render_field user_form.email class="form-control form-control-user is-invalid" placeholder=user_form.email.label %}
+                    {{ user_form.email.errors|striptags }}
+                  {% else %}
+                    {% render_field user_form.email class="form-control form-control-user" placeholder=user_form.email.label %}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  {% if user_form.first_name.errors %}
+                    {% render_field user_form.first_name class="form-control form-control-user is-invalid" placeholder=user_form.first_name.label %}
+                    {{ user_form.first_name.errors|striptags }}
+                  {% else %}
+                    {% render_field user_form.first_name class="form-control form-control-user" placeholder=user_form.first_name.label %}
+                  {% endif %}
+                </div>
+                <div class="col-sm-6">
+                  {% if user_form.last_name.errors %}
+                    {% render_field user_form.last_name class="form-control form-control-user is-invalid" placeholder=user_form.last_name.label %}
+                    {{ user_form.last_name.errors|striptags }}
+                  {% else %}
+                    {% render_field user_form.last_name class="form-control form-control-user" placeholder=user_form.last_name.label %}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  {% if user_form.password1.errors %}
+                    {% render_field user_form.password1 class="form-control form-control-user is-invalid" placeholder=user_form.password1.label %}
+                    {{ user_form.password1.errors|striptags }}
+                  {% else %}
+                    {% render_field user_form.password1 class="form-control form-control-user" placeholder=user_form.password1.label %}
+                  {% endif %}
+                </div>
+                <div class="col-sm-6">
+                  {% if user_form.password2.errors %}
+                    {% render_field user_form.password2 class="form-control form-control-user is-invalid" placeholder=user_form.password2.label %}
+                    {{ user_form.password2.errors|striptags }}
+                  {% else %}
+                    {% render_field user_form.password2 class="form-control form-control-user" placeholder=user_form.password2.label %}
+                  {% endif %}
+                </div>
+              </div>
+              <button class="btn btn-primary btn-user btn-block" type="submit">
+                Criar
+              </button>
+              <!-- <a href="index.html" class="btn btn-google btn-user btn-block">
+                <i class="fab fa-google fa-fw"></i> Register with Google
+              </a>
+              <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
+              </a> -->
+            </form>
+            <hr>
+            <div class="text-center">
+              <a class="small" href="{% url 'core:home' %}">Voltar a Pagina Inicial.</a>
+            </div>
+            <!-- <hr>
+            <div class="text-center">
+              <a class="small" href="forgot-password.html">Forgot Password?</a>
+            </div>
+            <div class="text-center">
+              <a class="small" href="login.html">Already have an account? Login!</a>
+            </div> -->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
-
-  <footer class="mastfoot mt-auto">
-    <div class="inner">
-        © <a href="https://github.com/werberth">Betim</a> – Built with Django 2 and Bootstrap 4
-    </div>
-  </footer>
 {% endblock content %}
