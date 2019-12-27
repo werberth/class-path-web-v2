@@ -28,7 +28,7 @@
             <span>Class Path</span>
           </h3>
           <nav class="nav home-page-nav justify-content-center">
-            <a class="nav-link active" href="#">Login</a>
+            <a class="nav-link active" href="{% url 'accounts:login' %}">Login</a>
           </nav>
         </div>
       </header>
@@ -51,7 +51,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'jquery/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'theme/vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     {% block scripts %} {% endblock scripts %}
   </body>
