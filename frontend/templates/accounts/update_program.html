@@ -1,15 +1,15 @@
 {% extends 'dashboard_base.html' %}
 {% load staticfiles %}
 
-{% block title %} Create Program {% endblock title %}
+{% block title %} Update Program {% endblock title %}
 
 {% block extra_styles %}
     <link href="{% static 'styles/program_form.css' %}" rel="stylesheet">
 {% endblock extra_styles %}
 
 {% block content %}
-<h1 class="h3 mb-2 text-gray-800">Criar curso</h1>
-<p class="mb-4">A partir de curso é possivel criar turmas, vincular alunos e professore e adicionar matérias.</p>
+<h1 class="h3 mb-2 text-gray-800">Editar curso</h1>
+<p class="mb-4">O curso {{ program.name }} está vinculado a instituição {{ program.institution }}</p>
 <div class="col-xl-10 col-lg-10">
     <div class="card shadow mb-4 border-left-primary">
         <div class="card-body">

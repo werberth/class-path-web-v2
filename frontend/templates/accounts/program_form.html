@@ -1,0 +1,27 @@
+{% load widget_tweaks %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        {% if form.name.errors %}
+            {% render_field form.name class="form-control form-control-user is-invalid" placeholder=form.name.label %}
+            {{ form.name.errors|striptags }}
+        {% else %}
+            {% render_field form.name class="form-control form-control-user" placeholder=form.name.label %}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {% if form.description.errors %}
+            {% render_field form.description class="form-control is-invalid" placeholder=form.description.label %}
+            {{ form.description.errors|striptags }}
+        {% else %}
+            {% render_field form.description class="form-control" placeholder=form.description.label %}
+        {% endif %}
+    </div>
+    <div class="col-xl-2 float-right">
+        <button class="btn btn-primary btn-user btn-block" type="submit">Salvar</button>
+    </div>
+    <div class="col-xl-2 float-right">
+        <a class="btn btn-secondary btn-user btn-block" href="{% url 'accounts:list-program' %}">Voltar</a>
+    </div>
+</form>

@@ -29,8 +29,13 @@
             <tbody>
               {% for program in programs %}  
                 <tr>
-                    <td><span class="font-weight-bold">{{ program.name }}</span></td>
-                    <td>--</td>
+                    <td><span class="font-weight-bold" data-program-id="{{ program.id }}">{{ program.name }}</span></td>
+                    <td>
+                      <a href="{% url 'accounts:update-program' pk=program.id %}" class="btn btn-edit btn-warning btn-circle" title="Editar"
+                        data-toggle="tooltip" data-placement="right" title="Editar curso">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                    </td>
                 </tr>
               {% endfor %}              
             </tbody>
@@ -49,5 +54,9 @@
             "url": "{% static 'theme/js/demo/datatable_i18n.json' %}"
         }
     });
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
   </script>
 {% endblock extra_scripts %}

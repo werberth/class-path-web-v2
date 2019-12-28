@@ -6,8 +6,9 @@ from django.utils.decorators import method_decorator
 
 from django.views import generic
 
-from . import forms, models
+from . import base_views, forms, models
 
+# FBVs
 
 def signup(request):
     success_url = r('core:login')
@@ -35,6 +36,7 @@ def signup(request):
     }
     return render(request, template_name, context)
 
+# CBVs
 
 @method_decorator(login_required, name='dispatch')
 class CreateProgram(generic.CreateView):
@@ -50,11 +52,20 @@ class CreateProgram(generic.CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ListPrograms(generic.ListView):
+class ListProgram(base_views.BaseProgramView, generic.ListView):
     template_name = 'accounts/program_list.html'
     context_object_name = 'programs'
 
-    def get_queryset(self):
-        institution = self.request.user.admin.institution
-        queryset = models.Program.objects.filter(institution=institution)
-        return queryset
+
+@method_decorator(login_required, name='dispatch')
+class UpdateProgram(base_views.BaseProgramView, generic.UpdateView):
+    form_class = forms.ProgramForm
+    success_url = r('accounts:list-program')
+    template_name = 'accounts/update_program.html'
+    context_object_name = 'program'
+
+
+# define CBVs as FBVs
+create_program = CreateProgram.as_view()
+update_program = UpdateProgram.as_view()
+list_program = ListProgram.as_view()

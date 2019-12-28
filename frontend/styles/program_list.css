@@ -1,3 +1,7 @@
 #dataTable_wrapper .row {
     margin-bottom: 0.6em !important;
 }
+
+.btn-edit .fas {
+    margin-left: 2px !important;
+}
