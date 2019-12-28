@@ -1,7 +1,10 @@
 from django.urls import reverse_lazy as r
 from django.shortcuts import render, redirect
 
-from django.views.generic import CreateView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+from django.views import generic
 
 from . import forms, models
 
@@ -33,7 +36,8 @@ def signup(request):
     return render(request, template_name, context)
 
 
-class CreateProgram(CreateView):
+@method_decorator(login_required, name='dispatch')
+class CreateProgram(generic.CreateView):
     form_class = forms.ProgramForm
     success_url = r('core:dashboard')
     template_name = 'accounts/create_program.html'
@@ -43,3 +47,14 @@ class CreateProgram(CreateView):
         program.institution = self.request.user.admin.institution
         self.object = program.save()
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class ListPrograms(generic.ListView):
+    template_name = 'accounts/program_list.html'
+    context_object_name = 'programs'
+
+    def get_queryset(self):
+        institution = self.request.user.admin.institution
+        queryset = models.Program.objects.filter(institution=institution)
+        return queryset

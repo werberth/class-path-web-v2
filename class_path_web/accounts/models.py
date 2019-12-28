@@ -66,7 +66,7 @@ class Institution(models.Model):
 class Program(models.Model):
     name = models.CharField(_('name'), max_length=200)
     description = models.TextField(_('description'), blank=True, null=True)
-    institution = models.OneToOneField(Institution, on_delete=models.CASCADE)
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
     modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 

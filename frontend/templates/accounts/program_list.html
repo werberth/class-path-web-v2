@@ -1,0 +1,53 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %} Programs {% endblock title %}
+{% block extra_styles %}
+    <link href="{% static 'styles/program_list.css' %}" rel="stylesheet">
+{% endblock extra_styles %}
+
+
+{% block content %}
+    <h1 class="h1 mb-2 text-gray-800">Cursos</h1>
+    <p class="mb-4">Lista de cursos disponíveis cadastradas na instituição {{ request.user.admin.institution }}<br>
+      <a href="{% url 'accounts:create-program' %}">
+        Clique aqui para adicionar
+        <i class="fas fa-plus-circle"></i>
+      </a>
+    </p>
+
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for program in programs %}  
+                <tr>
+                    <td><span class="font-weight-bold">{{ program.name }}</span></td>
+                    <td>--</td>
+                </tr>
+              {% endfor %}              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block extra_scripts %}
+  <script src="{% static 'theme/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'theme/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script>
+    $('#dataTable').DataTable( {
+        "language": {
+            "url": "{% static 'theme/js/demo/datatable_i18n.json' %}"
+        }
+    });
+  </script>
+{% endblock extra_scripts %}

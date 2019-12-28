@@ -2,6 +2,8 @@
 {% load widget_tweaks %}
 {% load static %}
 
+{% block title %} Login {% endblock title %}
+
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-xl-10 col-lg-12 col-md-9">
@@ -19,10 +21,10 @@
                                     {% csrf_token %}
                                     {{ form.non_field_errors }}
                                     <div class="form-group">
-                                        {% render_field form.username class="form-control form-control-user" placeholder="Registration Number" %}
+                                        {% render_field form.username class="form-control form-control-user" placeholder="Numero de Matricula" %}
                                     </div>
                                     <div class="form-group">
-                                        {% render_field form.password class="form-control form-control-user" placeholder=form.password.label %}
+                                        {% render_field form.password class="form-control form-control-user" placeholder="Senha" %}
                                     </div>
                                     <!-- <div class="form-group">
                                         <div class="custom-control custom-checkbox small">
@@ -31,20 +33,20 @@
                                         </div>
                                     </div> -->
                                     <button class="btn btn-primary btn-user btn-block" type="submit">Entrar</button>
-                                    <!-- <hr>
+                                    <hr>
                                     <a href="#" class="btn btn-google btn-user btn-block">
-                                        <i class="fab fa-google fa-fw"></i> Login with Google
+                                        <i class="fab fa-google fa-fw"></i> Entrar com uma conta Google
                                     </a>
                                     <a href="#" class="btn btn-facebook btn-user btn-block">
-                                        <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                    </a> -->
+                                        <i class="fab fa-facebook-f fa-fw"></i> Entrar com o Facebook
+                                    </a>
                                 </form>
                                 <hr>
                                 <div class="text-center">
-                                    <a class="small" href="#">Forgot Password?</a>
+                                    <a class="small" href="#">Criar conta
                                 </div>
                                 <div class="text-center">
-                                    <a class="small" href="#">Create an Account!</a>
+                                    <a class="small" href="#">Esqueci minha senha</a>
                                 </div>
                                 <div class="text-center">
                                     <a class="small" href="{% url 'core:home' %}">Voltar a Pagina Inicial</a>

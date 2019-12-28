@@ -12,7 +12,7 @@
 <h1 class="h3 mb-2 text-gray-800">Criar curso</h1>
 <p class="mb-4">A partir de curso é possivel criar turmas, vincular alunos e professore e adicionar matérias.</p>
 <div class="col-xl-10 col-lg-10">
-    <div class="card shadow mb-4 border-left-info">
+    <div class="card shadow mb-4 border-left-primary">
         <div class="card-body">
             <form action="" method="POST">
                 {% csrf_token %}
@@ -34,6 +34,9 @@
                 </div>
                 <div class="col-xl-2 float-right">
                     <button class="btn btn-primary btn-user btn-block" type="submit">Salvar</button>
+                </div>
+                <div class="col-xl-2 float-right">
+                    <a class="btn btn-secondary btn-user btn-block" href="{% url 'accounts:program-list' %}">Voltar</a>
                 </div>
             </form>
         </div>

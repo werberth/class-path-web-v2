@@ -116,6 +116,7 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_REDIRECT_URL = 'core:dashboard'
+LOGOUT_REDIRECT_URL = 'accounts:login'
 
 #storage settings
 DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
