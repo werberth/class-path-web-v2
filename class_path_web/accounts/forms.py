@@ -20,19 +20,25 @@ class CustomUserCreationForm(UserCreationForm):
             "first_name", "last_name",
         )
 
-    def get_process_cleaned_data(self):
+    def process_cleaned_data(self):
         data = self.cleaned_data.copy()
 
         del data['password2']
 
-        data['is_admin'] = True
         data['password'] = data.pop('password1')
         return data
 
     def save(self):
         # define user permission field
-        data = self.get_process_cleaned_data()
-        print(data)
+        data = self.process_cleaned_data()
         # create user
         user = models.User.objects.create_user(**data)
         return user
+
+
+class ProgramForm(ModelForm):
+    class Meta:
+        model = models.Program
+        fields = (
+            'name', 'description'
+        )

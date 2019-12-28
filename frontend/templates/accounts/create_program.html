@@ -1,0 +1,42 @@
+{% extends 'dashboard_base.html' %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block title %} Create Program {% endblock title %}
+
+{% block extra_styles %}
+    <link href="{% static 'styles/create_program.css' %}" rel="stylesheet">
+{% endblock extra_styles %}
+
+{% block content %}
+<h1 class="h3 mb-2 text-gray-800">Criar curso</h1>
+<p class="mb-4">A partir de curso é possivel criar turmas, vincular alunos e professore e adicionar matérias.</p>
+<div class="col-xl-10 col-lg-10">
+    <div class="card shadow mb-4 border-left-info">
+        <div class="card-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% if form.name.errors %}
+                        {% render_field form.name class="form-control form-control-user is-invalid" placeholder=form.name.label %}
+                        {{ form.name.errors|striptags }}
+                    {% else %}
+                        {% render_field form.name class="form-control form-control-user" placeholder=form.name.label %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {% if form.description.errors %}
+                        {% render_field form.description class="form-control is-invalid" placeholder=form.description.label %}
+                        {{ form.description.errors|striptags }}
+                    {% else %}
+                        {% render_field form.description class="form-control" placeholder=form.description.label %}
+                    {% endif %}
+                </div>
+                <div class="col-xl-2 float-right">
+                    <button class="btn btn-primary btn-user btn-block" type="submit">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

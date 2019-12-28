@@ -115,6 +115,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_REDIRECT_URL = 'core:dashboard'
 
 #storage settings
 DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
