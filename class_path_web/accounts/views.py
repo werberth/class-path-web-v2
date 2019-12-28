@@ -10,7 +10,7 @@ from . import forms, models
 
 
 def signup(request):
-    success_url = r('core:home')
+    success_url = r('core:login')
     template_name = 'accounts/signup.html'
     user_form = forms.CustomUserCreationForm(initial={'is_admin': True})
     institution_form = forms.InstitutionForm()
