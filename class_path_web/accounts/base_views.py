@@ -8,6 +8,7 @@ class BaseInstitutionQuerysetView:
         queryset = self.model.objects.filter(institution=institution)
         return queryset
 
+
 class BaseFormView:
     template_title = None
 

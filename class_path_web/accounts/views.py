@@ -17,7 +17,7 @@ def signup(request):
     user_form = forms.CustomUserCreationForm()
     institution_form = forms.InstitutionForm()
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         return redirect(r('core:dashboard'))
 
     if request.method == "POST":
@@ -131,7 +131,6 @@ class CreateClass(base_views.BaseFormView, generic.CreateView):
         self.program = self.get_object()
         return super().post(request, *args, **kwargs)
 
-
     def form_valid(self, form):
         class_instance = form.save(commit=False)
         class_instance.program = self.program
@@ -173,18 +172,43 @@ class UpdateProgram(
     context_object_name = 'program'
 
 
-class DetailProgramView(
-    base_views.BaseInstitutionQuerysetView,
-    generic.DetailView):
+@method_decorator(login_required, name='dispatch')
+class UpdateClass(base_views.BaseFormView, generic.UpdateView):
+    form_class = forms.ClassForm
+    template_title = 'Editar Turma'
+    template_name = 'accounts/class/class_form.html'
+    context_object_name = 'class'
 
-    model = models.Program
-    context_object_name = 'program'
+    def get_queryset(self):
+        programs = self.request.user.admin.institution.programs.all()
+        classes = models.Class.objects.filter(program__in=programs)
+        return classes
+
+    def get_success_url(self):
+        url = r('accounts:classes', kwargs={'program': self.object.program.id})
+        return url
+
+
+class ClassList(generic.ListView):
+    model = models.Class
+    context_object_name = 'classes'
     template_name = 'accounts/class/class_list.html'
 
-    def get_context_data(self, **kwargs):
+    def get_object(self, queryset=None):
+        program_id = self.kwargs['program']
+        return get_object_or_404(models.Program, pk=program_id)
+
+    def get_context_data(self,**kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['classes'] = self.object.classes.all()
+        kwargs['program'] = self.program
         return kwargs
+
+    def get(self, request, *args, **kwargs):
+        self.program = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.program.classes.all()
 
 
 # define CBVs as FBVs
@@ -192,6 +216,7 @@ create_program = CreateProgram.as_view()
 create_class = CreateClass.as_view()
 create_teacher = CreateTeacher.as_view()
 update_program = UpdateProgram.as_view()
+update_class = UpdateClass.as_view()
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()
-program_detail = DetailProgramView.as_view()
+class_detail = ClassList.as_view()
