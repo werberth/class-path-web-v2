@@ -234,6 +234,19 @@ class DeleteClassView(generic.DeleteView):
         return url
 
 
+class DeleteTeacherView(generic.DeleteView):
+    success_url = r('accounts:list-teacher')
+
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        institution = self.request.user.admin.institution
+        teachers = models.Teacher.objects.filter(institution=institution)
+        users_ids = teachers.values_list('user__id', flat=True)
+        return models.User.objects.filter(id__in=users_ids)
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -248,3 +261,4 @@ list_teacher = ListTeacher.as_view()
 list_class = ClassList.as_view()
 # delete
 delete_class = DeleteClassView.as_view()
+delete_teacher = DeleteTeacherView.as_view()

@@ -2,11 +2,17 @@ from . import models
 
 from django.views import generic
 
+
 class BaseInstitutionQuerysetView:
     def get_queryset(self):
         institution = self.request.user.admin.institution
         queryset = self.model.objects.filter(institution=institution)
         return queryset
+
+
+class BaseDelete(generic.DeleteView):
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 class BaseFormView:

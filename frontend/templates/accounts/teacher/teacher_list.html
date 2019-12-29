@@ -35,7 +35,7 @@
                         data-toggle="tooltip" data-placement="right" title="Editar Professor">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="#" class="btn btn-danger btn-circle" title="Excluir Professor"
+                      <a href="{% url 'accounts:delete-teacher' pk=teacher.user.pk %}" class="btn btn-danger btn-circle" title="Excluir Professor"
                         data-toggle="tooltip" data-placement="right" title="Excluir Professor">
                         <i class="fas fa-trash"></i>
                       </a>
