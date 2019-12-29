@@ -14,31 +14,48 @@
     <div class="card shadow mb-4 border-left-primary">
         <div class="card-body">
             <form action="" method="POST">
+
               {% csrf_token %}
+
+              {% if teacher_form %}
+                <!-- available only in update view -->
+                <div class="form-group">
+                  {% include 'form_field.html' with field=teacher_form.cpf label=teacher_form.cpf.label %}
+                </div>
+                <div class="form-group">
+                  {% include 'form_field.html' with field=teacher_form.description label=teacher_form.description.label %}
+                </div>
+              {% endif %}
+
               <div class="form-group row">
                 <div class="col-sm-6 mb-3 mb-sm-0">
-                  {% include 'form_field.html' with field=form.registration_number placeholder="Username/Registration Number" %}
+                  {% include 'form_field.html' with field=form.registration_number label="Username / Registration Number" %}
                 </div>
                 <div class="col-sm-6">
-                  {% include 'form_field.html' with field=form.email placeholder=form.email.label %}
+                  {% include 'form_field.html' with field=form.email label=form.email.label %}
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-6 mb-3 mb-sm-0">
-                  {% include 'form_field.html' with field=form.first_name placeholder=form.first_name.label %}
+                  {% include 'form_field.html' with field=form.first_name label=form.first_name.label %}
                 </div>
                 <div class="col-sm-6">
-                    {% include 'form_field.html' with field=form.last_name placeholder=form.last_name.label %}
+                    {% include 'form_field.html' with field=form.last_name label=form.last_name.label %}
                 </div>
               </div>
-              <div class="form-group row">
-                <div class="col-sm-6 mb-3 mb-sm-0">
-                    {% include 'form_field.html' with field=form.password1 placeholder=form.password1.label %}
+
+              {% if form.password1 %}
+                <!-- available only in create view -->
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                      {% include 'form_field.html' with field=form.password1 label=form.password1.label %}
+                  </div>
+                  <div class="col-sm-6">
+                      {% include 'form_field.html' with field=form.password2 label=form.password2.label %}
+                  </div>
                 </div>
-                <div class="col-sm-6">
-                    {% include 'form_field.html' with field=form.password2 placeholder=form.password2.label %}
-                </div>
-              </div>
+              {% endif %}
+
               <div class="col-xl-2 float-right">
                   <button class="btn btn-primary btn-user btn-block" type="submit">Salvar</button>
               </div>
@@ -50,3 +67,12 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block extra_scripts %}
+  <script>
+    $(function () {
+      $("#id_cpf").addClass("placeholder-upper")
+      $('label[for="id_cpf"]').addClass("text-uppercase")
+    });
+  </script>
+{% endblock extra_scripts %}

@@ -31,7 +31,7 @@
                 <tr>
                     <td><span class="font-weight-bold" data-teacher-id="{{ teacher.id }}">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</span></td>
                     <td>
-                      <a href="#" class="btn btn-edit btn-warning btn-circle" title="Editar"
+                      <a href="{% url 'accounts:update-teacher' pk=teacher.pk %}" class="btn btn-edit btn-warning btn-circle" title="Editar"
                         data-toggle="tooltip" data-placement="right" title="Editar Professor">
                         <i class="fas fa-edit"></i>
                       </a>
@@ -52,15 +52,5 @@
 {% block extra_scripts %}
   <script src="{% static 'theme/vendor/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'theme/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-  <script>
-    $('#dataTable').DataTable( {
-        "language": {
-            "url": "{% static 'theme/js/demo/datatable_i18n.json' %}"
-        }
-    });
-
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  </script>
+  <script src="{% static 'js/list.js' %}"></script>
 {% endblock extra_scripts %}

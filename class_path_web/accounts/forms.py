@@ -36,6 +36,23 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
+class CustomUserUpdateForm(ModelForm):
+    class Meta:
+        model = models.User
+        fields = (
+            "registration_number", "email",
+            "first_name", "last_name",
+        )
+
+
+class TeacherForm(ModelForm):
+    class Meta:
+        model = models.Teacher
+        fields = (
+            'cpf', 'description',
+        )
+
+
 class ProgramForm(ModelForm):
     class Meta:
         model = models.Program

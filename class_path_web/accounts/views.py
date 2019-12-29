@@ -1,20 +1,20 @@
-from django.urls import reverse_lazy as r
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
-
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse_lazy as r
 from django.utils.decorators import method_decorator
-
 from django.views import generic
 
 from . import base_views, forms, models
 
 # FBVs
 
+@transaction.atomic
 def signup(request):
     success_url = r('core:login')
     template_name = 'accounts/signup.html'
-    user_form = forms.CustomUserCreationForm(initial={'is_admin': True})
+    user_form = forms.CustomUserCreationForm()
     institution_form = forms.InstitutionForm()
 
     if request.method == "POST":
@@ -35,6 +35,35 @@ def signup(request):
     }
     return render(request, template_name, context)
 
+@transaction.atomic
+def update_teacher(request, pk):
+    success_url = r('accounts:list-teacher')
+    template_title = 'Editar Profesor'
+    template_name = 'accounts/teacher/teacher_form.html'
+
+    teacher = get_object_or_404(models.Teacher, pk=pk)
+    user_form = forms.CustomUserUpdateForm(
+        request.POST or None,
+        instance=teacher.user
+    )
+    teacher_form = forms.TeacherForm(
+        request.POST or None,
+        instance=teacher
+    )
+
+    if user_form.is_valid() and teacher_form.is_valid():
+        user_form.save()
+        teacher_form.save()
+        return redirect(success_url)
+
+    context = {
+        'form': user_form,
+        'teacher_form': teacher_form,
+        'template_title': template_title,
+    }
+    return render(request, template_name, context)
+
+
 # CBVs
 
 @method_decorator(login_required, name='dispatch')
@@ -52,7 +81,7 @@ class CreateProgram(generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 class CreateTeacher(base_views.BaseFormView, generic.CreateView):
-    success_url = r('accounts:list-program')
+    success_url = r('accounts:list-teacher')
     form_class = forms.CustomUserCreationForm
     template_title = 'Criar Professor'
     template_name = 'accounts/teacher/teacher_form.html'
@@ -63,6 +92,7 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
             kwargs['form'] = self.get_form()
         return super().get_context_data(**kwargs)
 
+    @transaction.atomic
     def form_valid(self, form):
         institution = self.request.user.admin.institution
 

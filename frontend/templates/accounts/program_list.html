@@ -56,15 +56,5 @@
 {% block extra_scripts %}
   <script src="{% static 'theme/vendor/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'theme/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-  <script>
-    $('#dataTable').DataTable( {
-        "language": {
-            "url": "{% static 'theme/js/demo/datatable_i18n.json' %}"
-        }
-    });
-
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  </script>
+  <script src="{% static 'js/list.js' %}"></script>
 {% endblock extra_scripts %}

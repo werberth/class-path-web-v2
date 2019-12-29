@@ -1,3 +1,7 @@
+.placeholder-upper::placeholder {
+    text-transform: uppercase !important;
+}
+
 @media (min-width: 576px) {
     .card-body {
         padding: 2em !important;

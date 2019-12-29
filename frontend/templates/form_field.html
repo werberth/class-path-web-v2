@@ -1,8 +1,16 @@
 {% load widget_tweaks %}
 
+<label for="{{ field.auto_id }}">
+    {% if label %}
+        {{ label }}:
+    {% else %}
+        {{ field.label }}:
+    {% endif %}
+</label>
+
 {% if field.errors %}
-    {% render_field field class="form-control is-invalid" placeholder=placeholder %}
+    {% render_field field class="form-control is-invalid" %}
     {{ field.errors|striptags }}
 {% else %}
-    {% render_field field class="form-control" placeholder=field.label %}
+    {% render_field field class="form-control" %}
 {% endif %}
