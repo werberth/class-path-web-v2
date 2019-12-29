@@ -151,6 +151,10 @@ class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
     template_name = 'accounts/teacher/teacher_list.html'
     context_object_name = 'teachers'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(is_active=True)
+
 
 @method_decorator(login_required, name='dispatch')
 class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
@@ -245,6 +249,16 @@ class DeleteTeacherView(generic.DeleteView):
         teachers = models.Teacher.objects.filter(institution=institution)
         users_ids = teachers.values_list('user__id', flat=True)
         return models.User.objects.filter(id__in=users_ids)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.teacher.is_active = False
+
+        self.object.teacher.save()
+        self.object.save()
+
+        return HttpResponseRedirect(self.success_url)
 
 
 # define CBVs as FBVs

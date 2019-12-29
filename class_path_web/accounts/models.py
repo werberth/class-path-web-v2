@@ -129,6 +129,7 @@ class Teacher(Profile):
         on_delete=models.CASCADE,
         related_name="teachers"
     )
+    is_active = models.BooleanField(_('is active'), default=True)
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
     modified_at = models.DateTimeField(_('modified at'), auto_now=True)
 
