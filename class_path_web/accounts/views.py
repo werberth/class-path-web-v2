@@ -107,10 +107,37 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+@method_decorator(login_required, name='dispatch')
+class CreateClass(base_views.BaseFormView, generic.CreateView):
+    form_class = forms.ClassForm
+    success_url = r('accounts:list-program')
+    template_title = 'Criar Turma'
+    template_name = 'accounts/class/class_form.html'
+
+
+    def get(self, request, *args, **kwargs):
+        program_id = self.kwargs['program']
+        self.program = get_object_or_404(models.Program, pk=program_id)
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        class_instance = form.save(commit=False)
+        class_instance.program = self.program
+        self.object = class_instance.save()
+        return super().form_valid(form)
+
+
 class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Teacher
     template_name = 'accounts/teacher/teacher_list.html'
     context_object_name = 'teachers'
+
+
+@method_decorator(login_required, name='dispatch')
+class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
+    model = models.Program
+    template_name = 'accounts/program/program_list.html'
+    context_object_name = 'programs'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -136,7 +163,8 @@ class UpdateProgram(
 
 # define CBVs as FBVs
 create_program = CreateProgram.as_view()
+create_class = CreateClass.as_view()
+create_teacher = CreateTeacher.as_view()
 update_program = UpdateProgram.as_view()
 list_program = ListProgram.as_view()
-create_teacher = CreateTeacher.as_view()
 list_teacher = ListTeacher.as_view()

@@ -59,3 +59,11 @@ class ProgramForm(ModelForm):
         fields = (
             'name', 'description'
         )
+
+
+class ClassForm(ModelForm):
+    class Meta:
+        model = models.Class
+        fields = (
+            'name', 'description'
+        )
