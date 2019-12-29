@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy as r
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -26,8 +27,6 @@ def signup(request):
             # create admin user
             user_form.cleaned_data['is_admin'] = True
             user = user_form.save()
-            # define this user as admin of this that institution
-            models.Admin.objects.create(user=user, institution=institution)
             return redirect(success_url)
 
     context = {
@@ -41,7 +40,7 @@ def signup(request):
 @method_decorator(login_required, name='dispatch')
 class CreateProgram(generic.CreateView):
     form_class = forms.ProgramForm
-    success_url = r('core:dashboard')
+    success_url = r('core:list-program')
     template_name = 'accounts/create_program.html'
 
     def form_valid(self, form):
@@ -52,13 +51,47 @@ class CreateProgram(generic.CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ListProgram(base_views.BaseProgramView, generic.ListView):
+class CreateTeacher(base_views.BaseFormView, generic.CreateView):
+    success_url = r('accounts:list-program')
+    form_class = forms.CustomUserCreationForm
+    template_title = 'Criar Professor'
+    template_name = 'accounts/teacher/teacher_form.html'
+
+    def get_context_data(self, **kwargs):
+        """Insert the form into the context dict."""
+        if 'form' not in kwargs:
+            kwargs['form'] = self.get_form()
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        institution = self.request.user.admin.institution
+
+        form.cleaned_data['is_teacher'] = True
+        self.object = form.save()
+
+        teacher = models.Teacher.objects.create(
+            user=self.object,
+            institution=institution
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
+    model = models.Teacher
+    template_name = 'accounts/teacher/teacher_list.html'
+    context_object_name = 'teachers'
+
+
+@method_decorator(login_required, name='dispatch')
+class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
+    model = models.Program
     template_name = 'accounts/program_list.html'
     context_object_name = 'programs'
 
 
 @method_decorator(login_required, name='dispatch')
-class UpdateProgram(base_views.BaseProgramView, generic.UpdateView):
+class UpdateProgram(base_views.BaseInstitutionQuerysetView, generic.UpdateView):
+    model = models.Program
     form_class = forms.ProgramForm
     success_url = r('accounts:list-program')
     template_name = 'accounts/update_program.html'
@@ -69,3 +102,5 @@ class UpdateProgram(base_views.BaseProgramView, generic.UpdateView):
 create_program = CreateProgram.as_view()
 update_program = UpdateProgram.as_view()
 list_program = ListProgram.as_view()
+create_teacher = CreateTeacher.as_view()
+list_teacher = ListTeacher.as_view()

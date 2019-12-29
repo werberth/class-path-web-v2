@@ -1,0 +1,8 @@
+{% load widget_tweaks %}
+
+{% if field.errors %}
+    {% render_field field class="form-control is-invalid" placeholder=placeholder %}
+    {{ field.errors|striptags }}
+{% else %}
+    {% render_field field class="form-control" placeholder=field.label %}
+{% endif %}
