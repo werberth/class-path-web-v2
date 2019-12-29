@@ -1,10 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
 from . import views
 
 
 urlpatterns = [
+    path('api/', include(('class_path_web.accounts.api.urls', 'core'), namespace="core")),
     path('sign-up/', views.signup, name='sign-up'),
     path('logout/', auth_views.LogoutView.as_view(), name="logout"),
     path(
@@ -23,5 +24,6 @@ urlpatterns = [
     path('update_class/<int:pk>/', views.update_class, name='update-class'),
     path('programs/', views.list_program, name='list-program'),
     path('teachers/', views.list_teacher, name='list-teacher'),
-    path('classes/<int:program>/', views.class_detail, name='list-class'),
+    path('classes/<int:program>/', views.list_class, name='list-class'),
+    path('delete-class/<int:pk>/', views.delete_class, name='delete-class'),
 ]

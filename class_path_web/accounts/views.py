@@ -113,13 +113,17 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
 @method_decorator(login_required, name='dispatch')
 class CreateClass(base_views.BaseFormView, generic.CreateView):
     form_class = forms.ClassForm
-    success_url = r('accounts:list-program')
     template_title = 'Criar Turma'
     template_name = 'accounts/class/class_form.html'
 
     def get_object(self, queryset=None):
         program_id = self.kwargs['program']
         return get_object_or_404(models.Program, pk=program_id)
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['program'] = self.program
+        return kwargs
 
     def get(self, request, *args, **kwargs):
         self.object = None
@@ -136,6 +140,10 @@ class CreateClass(base_views.BaseFormView, generic.CreateView):
         class_instance.program = self.program
         self.object = class_instance.save()
         return super().form_valid(form)
+
+    def get_success_url(self):
+        url = r('accounts:list-class', kwargs={'program': self.object.program.id})
+        return url
 
 
 class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
@@ -185,7 +193,7 @@ class UpdateClass(base_views.BaseFormView, generic.UpdateView):
         return classes
 
     def get_success_url(self):
-        url = r('accounts:classes', kwargs={'program': self.object.program.id})
+        url = r('accounts:list-class', kwargs={'program': self.object.program.id})
         return url
 
 
@@ -211,12 +219,32 @@ class ClassList(generic.ListView):
         return self.program.classes.all()
 
 
+class DeleteClassView(generic.DeleteView):
+
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        institution = self.request.user.admin.institution
+        programs = institution.programs.all()
+        return models.Class.objects.filter(program__in=programs)
+
+    def get_success_url(self):
+        url = r('accounts:list-class', kwargs={'program': self.object.program.id})
+        return url
+
+
 # define CBVs as FBVs
+# create
 create_program = CreateProgram.as_view()
 create_class = CreateClass.as_view()
 create_teacher = CreateTeacher.as_view()
+# update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
+# list
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()
-class_detail = ClassList.as_view()
+list_class = ClassList.as_view()
+# delete
+delete_class = DeleteClassView.as_view()
