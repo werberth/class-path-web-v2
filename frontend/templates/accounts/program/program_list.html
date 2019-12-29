@@ -27,13 +27,20 @@
               </tr>
             </thead>
             <tbody>
-              {% for program in programs %}  
+              {% for program in programs %}
                 <tr>
-                    <td><span class="font-weight-bold" data-program-id="{{ program.id }}">{{ program.name }}</span></td>
                     <td>
-                      <a href="{% url 'accounts:create-class' program=program.id %}" class="btn btn-info btn-circle" title="Adicionar Turma"
-                        data-toggle="tooltip" data-placement="right" title="Adicionar Turma">
-                        <i class="fas fa-chalkboard"></i>
+                      <span class="font-weight-bold" data-program-id="{{ program.id }}">
+                        {{ program.name }}
+                      </span>
+                    </td>
+                    <td>
+                      <a href="{% url 'accounts:program-detail' pk=program.id %}"
+                        class="btn btn-info btn-icon-split" data-toggle="tooltip" data-placement="right">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-chalkboard"></i>
+                        </span>
+                        <span class="text">Turmas</span>
                       </a>
                       <a href="{% url 'accounts:update-program' pk=program.id %}" class="btn btn-edit btn-warning btn-circle" title="Editar"
                         data-toggle="tooltip" data-placement="right" title="Editar Curso">
@@ -45,7 +52,7 @@
                       </a>
                     </td>
                 </tr>
-              {% endfor %}              
+              {% endfor %}
             </tbody>
           </table>
         </div>

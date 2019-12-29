@@ -114,11 +114,20 @@ class CreateClass(base_views.BaseFormView, generic.CreateView):
     template_title = 'Criar Turma'
     template_name = 'accounts/class/class_form.html'
 
+    def get_object(self, queryset=None):
+        program_id = self.kwargs['program']
+        return get_object_or_404(models.Program, pk=program_id)
 
     def get(self, request, *args, **kwargs):
-        program_id = self.kwargs['program']
-        self.program = get_object_or_404(models.Program, pk=program_id)
+        self.object = None
+        self.program = self.get_object()
         return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        self.program = self.get_object()
+        return super().post(request, *args, **kwargs)
+
 
     def form_valid(self, form):
         class_instance = form.save(commit=False)
@@ -161,6 +170,20 @@ class UpdateProgram(
     context_object_name = 'program'
 
 
+class DetailProgramView(
+    base_views.BaseInstitutionQuerysetView,
+    generic.DetailView):
+
+    model = models.Program
+    context_object_name = 'program'
+    template_name = 'accounts/class/class_list.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['classes'] = self.object.classes.all()
+        return kwargs
+
+
 # define CBVs as FBVs
 create_program = CreateProgram.as_view()
 create_class = CreateClass.as_view()
@@ -168,3 +191,4 @@ create_teacher = CreateTeacher.as_view()
 update_program = UpdateProgram.as_view()
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()
+program_detail = DetailProgramView.as_view()
