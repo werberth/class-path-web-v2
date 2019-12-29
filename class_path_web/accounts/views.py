@@ -17,6 +17,9 @@ def signup(request):
     user_form = forms.CustomUserCreationForm()
     institution_form = forms.InstitutionForm()
 
+    if request.user.is_authenticated:
+        return redirect(r('core:dashboard'))
+
     if request.method == "POST":
         user_form = forms.CustomUserCreationForm(request.POST)
         institution_form = forms.InstitutionForm(request.POST)
