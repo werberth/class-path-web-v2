@@ -1,0 +1,34 @@
+{% extends 'dashboard_base.html' %}
+{% load staticfiles %}
+
+{% block title %} {{ template_title }} {% endblock title %}
+
+{% block extra_styles %}
+    <link href="{% static 'styles/form.css' %}" rel="stylesheet">
+{% endblock extra_styles %}
+
+{% block content %}
+<h1 class="h3 mb-2 text-gray-800">{{ template_title }}</h1>
+<p class="mb-4">A partir de curso é possivel criar turmas, vincular alunos e professore e adicionar matérias.</p>
+<div class="col-xl-10 col-lg-10">
+    <div class="card shadow mb-4 border-left-primary">
+        <div class="card-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                {% include 'form_field.html' with field=form.name label=form.name.label %}
+                </div>
+                <div class="form-group">
+                    {% include 'form_field.html' with field=form.description label=form.description.label %}
+                </div>
+                <div class="col-xl-2 float-right">
+                    <button class="btn btn-primary btn-user btn-block" type="submit">Salvar</button>
+                </div>
+                <div class="col-xl-2 float-right">
+                    <a class="btn btn-secondary btn-user btn-block" href="{% url 'accounts:list-program' %}">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

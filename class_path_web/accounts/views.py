@@ -67,10 +67,11 @@ def update_teacher(request, pk):
 # CBVs
 
 @method_decorator(login_required, name='dispatch')
-class CreateProgram(generic.CreateView):
+class CreateProgram(base_views.BaseFormView, generic.CreateView):
     form_class = forms.ProgramForm
-    success_url = r('core:list-program')
-    template_name = 'accounts/create_program.html'
+    success_url = r('accounts:list-program')
+    template_title = 'Criar Curso'
+    template_name = 'accounts/program/program_form.html'
 
     def form_valid(self, form):
         program = form.save(commit=False)
@@ -115,16 +116,21 @@ class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
 @method_decorator(login_required, name='dispatch')
 class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Program
-    template_name = 'accounts/program_list.html'
+    template_name = 'accounts/program/program_list.html'
     context_object_name = 'programs'
 
 
 @method_decorator(login_required, name='dispatch')
-class UpdateProgram(base_views.BaseInstitutionQuerysetView, generic.UpdateView):
+class UpdateProgram(
+    base_views.BaseFormView,
+    base_views.BaseInstitutionQuerysetView,
+    generic.UpdateView):
+
     model = models.Program
     form_class = forms.ProgramForm
     success_url = r('accounts:list-program')
-    template_name = 'accounts/update_program.html'
+    template_title = 'Editar Curso'
+    template_name = 'accounts/program/program_form.html'
     context_object_name = 'program'
 
 
