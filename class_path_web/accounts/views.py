@@ -148,6 +148,30 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
         return url
 
 
+class ListStudent(generic.ListView):
+    context_object_name = 'students'
+    template_name = 'accounts/student/student_list.html'
+
+    def get_object(self, queryset=None):
+        institution = self.request.user.admin.institution
+        program_ids = institution.programs.values_list('id', flat=True)
+        _class = get_object_or_404(
+            models.Class,
+            pk=self.kwargs['class'],
+            program__in=program_ids
+        )
+        return _class
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['class'] = self.get_object()
+        return kwargs
+
+    def get_queryset(self):
+        _class = self.get_object()
+        return _class.students.all()
+
+
 @method_decorator(login_required, name='dispatch')
 class CreateClass(base_views.BaseFormView, generic.CreateView):
     form_class = forms.ClassForm
@@ -250,15 +274,12 @@ class ClassList(generic.ListView):
 
     def get_context_data(self,**kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['program'] = self.program
+        kwargs['program'] = self.get_object()
         return kwargs
 
-    def get(self, request, *args, **kwargs):
-        self.program = self.get_object()
-        return super().get(request, *args, **kwargs)
-
     def get_queryset(self):
-        return self.program.classes.all()
+        program = self.get_object()
+        return program.classes.all()
 
 
 class DeleteClassView(generic.DeleteView):
@@ -312,6 +333,7 @@ update_class = UpdateClass.as_view()
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()
 list_class = ClassList.as_view()
+list_student = ListStudent.as_view()
 # delete
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()

@@ -16,16 +16,21 @@ urlpatterns = [
         ),
         name="login"
     ),
+    # create
     path('create-program/', views.create_program, name='create-program'),
     path('create-teacher/', views.create_teacher, name='create-teacher'),
     path('create-class/<int:program>/', views.create_class, name='create-class'),
     path('create-student/<int:class>/', views.create_student, name='create-student'),
+    # update
     path('update-program/<int:pk>/', views.update_program, name='update-program'),
     path('update-teacher/<int:pk>/', views.update_teacher, name='update-teacher'),
     path('update_class/<int:pk>/', views.update_class, name='update-class'),
+    # list
     path('programs/', views.list_program, name='list-program'),
     path('teachers/', views.list_teacher, name='list-teacher'),
     path('classes/<int:program>/', views.list_class, name='list-class'),
+    path('students/<int:class>/', views.list_student, name='list-student'),
+    # delete
     path('delete-class/<int:pk>/', views.delete_class, name='delete-class'),
     path('delete-teacher/<int:pk>/', views.delete_teacher, name='delete-teacher'),
 ]

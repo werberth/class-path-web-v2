@@ -10,7 +10,7 @@ $(function () {
             }
         },
         "language": {
-            "url": "../../static/js/datatable_i18n.json"
+            "url": "../../../static/js/datatable_i18n.json"
         },
     });
   

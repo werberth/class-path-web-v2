@@ -11,9 +11,13 @@
     <h1 class="h1 mb-2 text-gray-800">Turmas</h1>
     <p class="mb-4">Lista de turmas vinculados a curso {{ program.name }}<br>
       <a href="{% url 'accounts:create-class' program=program.id %}">
-        Clique aqui para adicionar
         <i class="fas fa-plus-circle"></i>
-      </a>
+        Clique aqui para adicionar
+      </a><br>
+      <a href="{% url 'accounts:list-program' %}">
+          <i class="fas fa-arrow-circle-left"></i>
+          Voltar a listagem de cursos
+        </a>
     </p>
 
     <div class="card shadow mb-4">
@@ -31,6 +35,13 @@
                 <tr>
                     <td><span class="font-weight-bold" data-class-id="{{ class.id }}">{{ class.name }}</span></td>
                     <td>
+                      <a href="{% url 'accounts:list-student' class=class.id %}"
+                        class="btn btn-info btn-icon-split" data-toggle="tooltip" data-placement="right">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-user-graduate"></i>
+                        </span>
+                        <span class="text">Estudantes</span>
+                      </a>
                       <a href="{% url 'accounts:update-class' pk=class.id %}" class="btn btn-edit btn-warning btn-circle" title="Editar Turma"
                         data-toggle="tooltip" data-placement="right" title="Editar Turma">
                         <i class="fas fa-edit"></i>
