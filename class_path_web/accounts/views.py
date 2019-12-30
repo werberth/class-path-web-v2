@@ -148,7 +148,6 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
 
 
 class CreateStudent(base_views.BaseFormView, generic.CreateView):
-    success_url = r('accounts:list-class')
     form_class = forms.CustomUserCreationForm
     template_title = 'Criar Estudante'
     template_name = 'accounts/student/student_form.html'
@@ -187,7 +186,7 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        url = r('accounts:list-class', kwargs={'program': self._class.program.id})
+        url = r('accounts:list-student', kwargs={'class': self._class.id})
         return url
 
 
@@ -212,7 +211,7 @@ class ListStudent(generic.ListView):
 
     def get_queryset(self):
         _class = self.get_object()
-        return _class.students.all()
+        return _class.students.filter(is_active=True)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -363,6 +362,36 @@ class DeleteTeacherView(generic.DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
+class DeleteStudentView(generic.DeleteView):
+
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        classes_id = utils.get_classes(self.request.user)
+        students = models.Student.objects.filter(class_id__in=classes_id)
+        users_ids = students.values_list('user__id', flat=True)
+        return models.User.objects.filter(id__in=users_ids)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.student.is_active = False
+
+        self.object.student.save()
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        url = r(
+            'accounts:list-student',
+            kwargs={
+                'class': self.object.student.class_id.pk
+            }
+        )
+        return url
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -380,3 +409,4 @@ list_student = ListStudent.as_view()
 # delete
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
+delete_student = DeleteStudentView.as_view()

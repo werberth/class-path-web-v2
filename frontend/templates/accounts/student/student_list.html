@@ -39,7 +39,7 @@
                         data-toggle="tooltip" data-placement="right" title="Editar Estudante">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="#" class="btn btn-danger btn-circle" title="Excluir Estudante"
+                      <a href="{% url 'accounts:delete-student' pk=student.user.id %}" class="btn btn-danger btn-circle" title="Excluir Estudante"
                         data-toggle="tooltip" data-placement="right" title="Excluir Estudante">
                         <i class="fas fa-trash"></i>
                       </a>
