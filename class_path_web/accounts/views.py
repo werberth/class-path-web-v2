@@ -90,12 +90,6 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
     template_title = 'Criar Professor'
     template_name = 'accounts/teacher/teacher_form.html'
 
-    def get_context_data(self, **kwargs):
-        """Insert the form into the context dict."""
-        if 'form' not in kwargs:
-            kwargs['form'] = self.get_form()
-        return super().get_context_data(**kwargs)
-
     @transaction.atomic
     def form_valid(self, form):
         institution = self.request.user.admin.institution
@@ -108,6 +102,50 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
             institution=institution
         )
         return HttpResponseRedirect(self.get_success_url())
+
+
+class CreateStudent(base_views.BaseFormView, generic.CreateView):
+    success_url = r('accounts:list-class')
+    form_class = forms.CustomUserCreationForm
+    template_title = 'Criar Estudante'
+    template_name = 'accounts/student/student_form.html'
+
+    def get_class(self):
+        institution = self.request.user.admin.institution
+        programs = institution.programs.values_list('id', flat=True)
+        class_instance = get_object_or_404(
+            models.Class,
+            pk=self.kwargs['class'],
+            program__in=programs
+        )
+        return class_instance
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        self._class = self.get_class()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        self._class = self.get_class()
+        return super().post(request, *args, **kwargs)
+
+    @transaction.atomic
+    def form_valid(self, form):
+        institution = self.request.user.admin.institution
+
+        form.cleaned_data['is_student'] = True
+        self.object = form.save()
+
+        student = models.Student.objects.create(
+            user=self.object,
+            class_id=self._class
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        url = r('accounts:list-class', kwargs={'program': self._class.program.id})
+        return url
 
 
 @method_decorator(login_required, name='dispatch')
@@ -266,6 +304,7 @@ class DeleteTeacherView(generic.DeleteView):
 create_program = CreateProgram.as_view()
 create_class = CreateClass.as_view()
 create_teacher = CreateTeacher.as_view()
+create_student = CreateStudent.as_view()
 # update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
