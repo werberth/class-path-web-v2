@@ -31,7 +31,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for class in classes %}  
+              {% for class in classes %}
                 <tr>
                     <td><span class="font-weight-bold" data-class-id="{{ class.id }}">{{ class.name }}</span></td>
                     <td>
@@ -41,6 +41,13 @@
                           <i class="fas fa-user-graduate"></i>
                         </span>
                         <span class="text">Estudantes</span>
+                      </a>
+                      <a href="#"
+                        class="btn btn-primary btn-icon-split" data-toggle="tooltip" data-placement="right">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-book"></i>
+                        </span>
+                        <span class="text">Disciplinas</span>
                       </a>
                       <a href="{% url 'accounts:update-class' pk=class.id %}" class="btn btn-edit btn-warning btn-circle" title="Editar Turma"
                         data-toggle="tooltip" data-placement="right" title="Editar Turma">

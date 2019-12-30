@@ -247,6 +247,39 @@ class CreateClass(base_views.BaseFormView, generic.CreateView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+class CreateCourse(base_views.BaseFormView, generic.CreateView):
+    form_class = forms.CourseForm
+    template_title = 'Criar Disciplina'
+    template_name = 'accounts/course/course_form.html'
+
+    @property
+    def _class(self):
+        institution = self.request.user.admin.institution
+        programs = institution.programs.values_list('id', flat=True)
+        class_instance = get_object_or_404(
+            models.Class,
+            pk=self.kwargs['class'],
+            program__in=programs
+        )
+        return class_instance
+
+    def form_valid(self, form):
+        course = form.save(commit=False)
+        course.class_id = self._class
+        self.object = course.save()
+        return super().form_valid(form)
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['class'] = self._class
+        return kwargs
+
+    def get_success_url(self):
+        url = r('accounts:list-class', kwargs={'program': self._class.program.id})
+        return url
+
+
 class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Teacher
     template_name = 'accounts/teacher/teacher_list.html'
@@ -395,6 +428,7 @@ create_program = CreateProgram.as_view()
 create_class = CreateClass.as_view()
 create_teacher = CreateTeacher.as_view()
 create_student = CreateStudent.as_view()
+create_course = CreateCourse.as_view()
 # update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()

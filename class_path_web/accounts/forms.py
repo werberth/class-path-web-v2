@@ -67,3 +67,13 @@ class ClassForm(ModelForm):
         fields = (
             'name', 'description'
         )
+
+
+class CourseForm(ModelForm):
+    class Meta:
+        model = models.Course
+        fields = (
+            'name', 'description',
+            'teacher'
+        )
+

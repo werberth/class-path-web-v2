@@ -1,6 +1,10 @@
 $(function () {
     $('#dataTable').DataTable({
-        fnDrawCallback: function(oSettings) {
+        "columns": [
+            { "width": "40%" },
+            null
+        ],
+        "fnDrawCallback": function(oSettings) {
             let totalPages = this.api().page.info().pages;
             if(!totalPages | totalPages == 1){
                 $('.dataTables_paginate').hide(); 

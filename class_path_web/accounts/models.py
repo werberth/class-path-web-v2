@@ -48,7 +48,7 @@ class Profile(models.Model):
         abstract = True
 
     def __str__(self):
-        return self.full_name or self.user.email
+        return self.user.email
 
 
 class Institution(models.Model):
