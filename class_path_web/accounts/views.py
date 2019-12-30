@@ -6,7 +6,7 @@ from django.urls import reverse_lazy as r
 from django.utils.decorators import method_decorator
 from django.views import generic
 
-from . import base_views, forms, models
+from . import base_views, forms, models, utils
 
 # FBVs
 
@@ -44,7 +44,13 @@ def update_teacher(request, pk):
     template_title = 'Editar Profesor'
     template_name = 'accounts/teacher/teacher_form.html'
 
-    teacher = get_object_or_404(models.Teacher, pk=pk)
+    institution = request.user.admin.institution
+    teacher = get_object_or_404(
+        models.Teacher,
+        pk=pk,
+        institution=institution,
+    )
+
     user_form = forms.CustomUserUpdateForm(
         request.POST or None,
         instance=teacher.user
@@ -62,6 +68,43 @@ def update_teacher(request, pk):
     context = {
         'form': user_form,
         'teacher_form': teacher_form,
+        'template_title': template_title,
+    }
+    return render(request, template_name, context)
+
+@transaction.atomic
+def update_student(request, pk):
+    template_title = 'Editar Student'
+    template_name = 'accounts/student/student_form.html'
+
+    classes_id = utils.get_classes(request.user)
+    student = get_object_or_404(
+        models.Student,
+        pk=pk,
+        class_id__in=classes_id
+    )
+
+    user_form = forms.CustomUserUpdateForm(
+        request.POST or None,
+        instance=student.user
+    )
+    student_form = forms.TeacherForm(
+        request.POST or None,
+        instance=student
+    )
+
+    if user_form.is_valid() and student_form.is_valid():
+        user_form.save()
+        student_form.save()
+        success_url = r(
+            'accounts:list-student',
+            kwargs={'class': student.class_id.pk}
+        )
+        return redirect(success_url)
+
+    context = {
+        'form': user_form,
+        'student_form': student_form,
         'template_title': template_title,
     }
     return render(request, template_name, context)
