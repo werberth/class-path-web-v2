@@ -1,0 +1,60 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %} Disciplinas {% endblock title %}
+{% block extra_styles %}
+    <link href="{% static 'styles/list.css' %}" rel="stylesheet">
+{% endblock extra_styles %}
+
+
+{% block content %}
+    <h1 class="h1 mb-2 text-gray-800">Disciplinas</h1>
+    <p class="mb-4">Lista de disciplinas vinculadas a turma {{ class.name }}.<br>
+      <a href="{% url 'accounts:create-course' class=class.id %}">
+        <i class="fas fa-plus-circle"></i>
+        Clique aqui para adicionar
+      </a><br>
+      <a href="{% url 'accounts:list-class' program=class.program.id %}">
+        <i class="fas fa-arrow-circle-left"></i>
+        Voltar a listagem de turmas
+      </a>
+    </p>
+
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for course in courses %}  
+                <tr>
+                    <td><span class="font-weight-bold" data-course-id="{{ course.id }}">{{ course.name }}</span></td>
+                    <td>
+                      <a href="#" class="btn btn-edit btn-warning btn-circle" title="Editar Estudante"
+                        data-toggle="tooltip" data-placement="right" title="Editar Estudante">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <a href="#" class="btn btn-danger btn-circle" title="Excluir Estudante"
+                        data-toggle="tooltip" data-placement="right" title="Excluir Estudante">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block extra_scripts %}
+  <script src="{% static 'theme/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'theme/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'js/list.js' %}"></script>
+{% endblock extra_scripts %}

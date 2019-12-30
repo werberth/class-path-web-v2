@@ -354,6 +354,24 @@ class ClassList(generic.ListView):
         return program.classes.all()
 
 
+class ListCourse(generic.ListView):
+    model = models.Course
+    context_object_name = 'courses'
+    template_name = 'accounts/course/course_list.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(models.Class, pk=self.kwargs['class'])
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['class'] = self.get_object()
+        return kwargs
+
+    def get_queryset(self):
+        class_instance = self.get_object()
+        return class_instance.courses.all()
+
+
 class DeleteClassView(generic.DeleteView):
 
     def get(self, request, *args, **kwargs):
@@ -437,6 +455,7 @@ list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()
 list_class = ClassList.as_view()
 list_student = ListStudent.as_view()
+list_course = ListCourse.as_view()
 # delete
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
