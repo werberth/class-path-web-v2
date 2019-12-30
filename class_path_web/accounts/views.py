@@ -104,6 +104,7 @@ def update_student(request, pk):
 
     context = {
         'form': user_form,
+        'class': student.class_id,
         'student_form': student_form,
         'template_title': template_title,
     }
@@ -152,7 +153,8 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
     template_title = 'Criar Estudante'
     template_name = 'accounts/student/student_form.html'
 
-    def get_class(self):
+    @property
+    def _class(self):
         institution = self.request.user.admin.institution
         programs = institution.programs.values_list('id', flat=True)
         class_instance = get_object_or_404(
@@ -161,16 +163,6 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
             program__in=programs
         )
         return class_instance
-
-    def get(self, request, *args, **kwargs):
-        self.object = None
-        self._class = self.get_class()
-        return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        self.object = None
-        self._class = self.get_class()
-        return super().post(request, *args, **kwargs)
 
     @transaction.atomic
     def form_valid(self, form):
@@ -184,6 +176,11 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
             class_id=self._class
         )
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['class'] = self._class
+        return kwargs
 
     def get_success_url(self):
         url = r('accounts:list-student', kwargs={'class': self._class.id})
