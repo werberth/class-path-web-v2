@@ -4,18 +4,22 @@ import hashlib
 from time import time
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from ..accounts.models import Teacher, Student, Course
 from ..location.models import Location
 
+from ..accounts.models import Teacher
+
 
 class Content(models.Model):
     title = models.CharField(max_length=250)
-    description = models.CharField(max_length=250)
-    course = models.ForeignKey(
-        Course,
+    description = models.TextField(_('description'), blank=True, null=True)
+    teacher = models.ForeignKey(
+        Teacher,
         on_delete=models.CASCADE,
-        related_name="contents"
+        related_name="contents",
+        null=True
     )
     create_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -29,7 +33,7 @@ class Content(models.Model):
 
 class Activity(models.Model):
     title = models.CharField(max_length=250)
-    description = models.CharField(max_length=250)
+    description = models.TextField(_('description'), blank=True, null=True)
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,

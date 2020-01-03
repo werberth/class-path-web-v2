@@ -20,5 +20,12 @@ urlpatterns = [
             ('class_path_web.location.urls', 'location'),
             namespace="location"
         )
+    ),
+    path(
+        'content/',
+        include(
+            ('class_path_web.content.urls', 'content'),
+            namespace="content"
+        )
     )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
