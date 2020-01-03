@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from ..accounts.models import Teacher, Student, Course
 from ..location.models import Location
 
-from ..accounts.models import Teacher
+from ..accounts.models import Teacher, Class
 
 
 class Content(models.Model):
@@ -43,6 +43,12 @@ class Activity(models.Model):
         Content,
         on_delete=models.CASCADE,
         related_name="activities"
+    )
+    class_id = models.ForeignKey(
+        Class,
+        on_delete=models.CASCADE,
+        related_name="activities",
+        null=True
     )
     multimedia_required = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)
