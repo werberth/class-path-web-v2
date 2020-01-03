@@ -1,0 +1,61 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %} Localizações {% endblock title %}
+
+{% block extra_styles %}
+    <link href="{% static 'styles/list.css' %}" rel="stylesheet">
+{% endblock extra_styles %}
+
+
+{% block content %}
+    <h1 class="h1 mb-2 text-gray-800">Localizações</h1>
+    <p class="mb-4">
+        <a href="{% url 'location:create-location' %}">
+            <i class="fas fa-plus-circle"></i>
+            Clique aqui para adicionar
+        </a><br>
+        <a href="{% url 'core:dashboard' %}">
+        <i class="fas fa-arrow-circle-left"></i>
+        Voltar a pagina inicial
+        </a>
+    </p>
+
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for location in locations %}
+                <tr>
+                    <td><span class="font-weight-bold" data-location-id="{{ location.id }}">{{ location.name }}</span></td>
+                    <td>
+                        <a href="#" class="btn btn-edit btn-warning btn-circle"
+                          data-toggle="tooltip" data-placement="right" title="Editar Localização">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="#" class="btn btn-danger btn-circle"
+                          data-toggle="tooltip" data-placement="right" title="Excluir Localização">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block extra_scripts %}
+  <script src="{% static 'theme/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'theme/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'js/list.js' %}"></script>
+{% endblock extra_scripts %}

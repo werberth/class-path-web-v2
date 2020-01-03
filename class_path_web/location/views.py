@@ -19,4 +19,15 @@ class CreateLocationView(base_views.BaseFormView, generic.CreateView):
         return super().form_valid(form)
 
 
+class ListLocationView(generic.ListView):
+    context_object_name = 'locations'
+    template_name = 'location/location_list.html'
+
+    def get_queryset(self):
+        teacher = self.request.user.teacher
+        locations = teacher.locations.all()
+        return locations
+
+
 create_location = CreateLocationView.as_view()
+list_location = ListLocationView.as_view()
