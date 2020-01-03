@@ -51,9 +51,16 @@ class UpdateContentView(
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
-class ListLocationView(base_views.ContentBaseQueryset, generic.ListView):
+class ListContentView(base_views.ContentBaseQueryset, generic.ListView):
     context_object_name = 'contents'
-    template_name = 'location/content_list.html'
+    template_name = 'content/content_list.html'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
+class ListActivityView(base_views.ActivityBaseQueryset, generic.ListView):
+    context_object_name = 'activities'
+    template_name = 'content/activity/activity_list.html'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -68,5 +75,6 @@ class DeleteLocationView(
 create_content = CreateContentView.as_view()
 create_activity = CreateActivityView.as_view()
 update_content = UpdateContentView.as_view()
-list_content = ListLocationView.as_view()
+list_content = ListContentView.as_view()
+list_activity = ListActivityView.as_view()
 delete_content = DeleteLocationView.as_view()
