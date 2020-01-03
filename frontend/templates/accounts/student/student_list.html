@@ -1,24 +1,44 @@
 {% extends 'dashboard_base.html' %}
 {% load static %}
 
-{% block title %} Estudantes {% endblock title %}
+{% block title %}
+  {% if perms.accounts.is_admin  %}
+    Estudantes
+  {% elif perms.accounts.is_teacher %}
+    Turma {{ class.name }}
+  {% endif %}
+
+{% endblock title %}
 {% block extra_styles %}
     <link href="{% static 'styles/list.css' %}" rel="stylesheet">
 {% endblock extra_styles %}
 
 
 {% block content %}
-    <h1 class="h1 mb-2 text-gray-800">Estudantes</h1>
-    <p class="mb-4">Lista de estudantes vinculados a turma {{ class.name }}.<br>
-      <a href="{% url 'accounts:create-student' class=class.id %}">
-        <i class="fas fa-plus-circle"></i>
-        Clique aqui para adicionar
-      </a><br>
-      <a href="{% url 'accounts:list-class' program=class.program.id %}">
-        <i class="fas fa-arrow-circle-left"></i>
-        Voltar a listagem de turmas
-      </a>
-    </p>
+    {% with header="Lista de estudantes vinculados a turma" %}
+      {% if perms.accounts.is_admin  %}
+        <h1 class="h1 mb-2 text-gray-800">Estudantes</h1>
+        <p class="mb-4">{{ header }} {{ class.name }}.<br>
+          <a href="{% url 'accounts:create-student' class=class.id %}">
+            <i class="fas fa-plus-circle"></i>
+            Clique aqui para adicionar
+          </a><br>
+          <a href="{% url 'accounts:list-class' program=class.program.id %}">
+            <i class="fas fa-arrow-circle-left"></i>
+            Voltar a listagem de turmas
+          </a>
+        </p>
+      {% elif perms.accounts.is_teacher %}
+        <h1 class="h1 mb-2 text-gray-800">Turma</h1>
+        <p class="mb-4">{{ header }} {{ class.name }}.<br>
+        <p class="mb-4">
+          <a href="{% url 'accounts:list-teacher-courses' %}">
+            <i class="fas fa-arrow-circle-left"></i>
+            Voltar a pagina inicial
+          </a>
+        </p>
+      {% endif %}
+    {% endwith %}
 
     <div class="card shadow mb-4">
       <div class="card-body">
@@ -31,18 +51,20 @@
               </tr>
             </thead>
             <tbody>
-              {% for student in students %}  
+              {% for student in students %}
                 <tr>
                     <td><span class="font-weight-bold" data-class-id="{{ class.id }}">{{ student.user.first_name }} {{ student.user.last_name }}</span></td>
                     <td>
-                      <a href="{% url 'accounts:update-student' pk=student.pk %}" class="btn btn-edit btn-warning btn-circle" title="Editar Estudante"
-                        data-toggle="tooltip" data-placement="right" title="Editar Estudante">
-                        <i class="fas fa-edit"></i>
-                      </a>
-                      <a href="{% url 'accounts:delete-student' pk=student.user.id %}" class="btn btn-danger btn-circle" title="Excluir Estudante"
-                        data-toggle="tooltip" data-placement="right" title="Excluir Estudante">
-                        <i class="fas fa-trash"></i>
-                      </a>
+                      {% if perms.accounts.is_admin %}
+                        <a href="{% url 'accounts:update-student' pk=student.pk %}" class="btn btn-edit btn-warning btn-circle" title="Editar Estudante"
+                          data-toggle="tooltip" data-placement="right" title="Editar Estudante">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'accounts:delete-student' pk=student.user.id %}" class="btn btn-danger btn-circle" title="Excluir Estudante"
+                          data-toggle="tooltip" data-placement="right" title="Excluir Estudante">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                      {% endif %}
                     </td>
                 </tr>
               {% endfor %}

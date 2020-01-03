@@ -11,8 +11,8 @@
     <h1 class="h1 mb-2 text-gray-800">Cursos</h1>
     <p class="mb-4">Lista de cursos disponíveis cadastradas na instituição {{ request.user.admin.institution }}<br>
       <a href="{% url 'accounts:create-program' %}">
-        Clique aqui para adicionar
         <i class="fas fa-plus-circle"></i>
+        Clique aqui para adicionar
       </a><br>
       <a href="{% url 'core:dashboard'%}">
         <i class="fas fa-arrow-circle-left"></i>

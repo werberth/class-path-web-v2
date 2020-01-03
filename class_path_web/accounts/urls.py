@@ -33,6 +33,7 @@ urlpatterns = [
     path('teachers/', views.list_teacher, name='list-teacher'),
     path('teacher-courses/', views.list_teacher_courses, name='list-teacher-courses'),
     path('classes/<int:program>/', views.list_class, name='list-class'),
+    path('class/<int:class>/', views.list_class_students, name='list-class-students'),
     path('students/<int:class>/', views.list_student, name='list-student'),
     path('courses/<int:class>/', views.list_course, name='list-course'),
     # delete

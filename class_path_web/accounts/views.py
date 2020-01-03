@@ -272,9 +272,7 @@ class CreateCourse(base_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class ListStudent(generic.ListView):
-    context_object_name = 'students'
-    template_name = 'accounts/student/student_list.html'
+class ListStudent(base_views.ListStudentBase, generic.ListView):
 
     def get_object(self, queryset=None):
         institution = self.request.user.admin.institution
@@ -285,15 +283,6 @@ class ListStudent(generic.ListView):
             program__in=program_ids
         )
         return _class
-
-    def get_context_data(self,**kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['class'] = self.get_object()
-        return kwargs
-
-    def get_queryset(self):
-        _class = self.get_object()
-        return _class.students.filter(is_active=True)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -531,6 +520,21 @@ class TeacherListCourse(base_views.ListCourseBase):
         return courses
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
+class ListClassStudents(base_views.ListStudentBase, generic.ListView):
+
+    def get_object(self, queryset=None):
+        teacher = self.request.user.teacher
+        classes = teacher.courses.values_list('class_id__id',flat=True)
+        _class = get_object_or_404(
+            models.Class,
+            pk=self.kwargs['class'],
+            pk__in=classes
+        )
+        return _class
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -549,6 +553,7 @@ list_class = ClassList.as_view()
 list_student = ListStudent.as_view()
 list_course = ListCourse.as_view()
 list_teacher_courses = TeacherListCourse.as_view()
+list_class_students = ListClassStudents.as_view()
 # delete
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
