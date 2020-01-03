@@ -16,8 +16,8 @@
             Clique aqui para adicionar
         </a><br>
         <a href="{% url 'core:dashboard' %}">
-        <i class="fas fa-arrow-circle-left"></i>
-        Voltar a pagina inicial
+            <i class="fas fa-arrow-circle-left"></i>
+            Voltar a pagina inicial
         </a>
     </p>
 
@@ -36,7 +36,7 @@
                 <tr>
                     <td><span class="font-weight-bold" data-location-id="{{ location.id }}">{{ location.name }}</span></td>
                     <td>
-                        <a href="#" class="btn btn-edit btn-warning btn-circle"
+                        <a href="{% url 'location:update-location' pk=location.id %}" class="btn btn-edit btn-warning btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Editar Localização">
                           <i class="fas fa-edit"></i>
                         </a>
