@@ -36,11 +36,11 @@
                 <tr>
                     <td><span class="font-weight-bold" data-activity-id="{{ activity.id }}">{{ activity.title }}</span></td>
                     <td>
-                        <a href="#" class="btn btn-edit btn-warning btn-circle"
+                        <a href="{% url 'content:update-activity' pk=activity.id %}" class="btn btn-edit btn-warning btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Editar Atividade">
                           <i class="fas fa-edit"></i>
                         </a>
-                        <a href="#" class="btn btn-danger btn-circle"
+                        <a href="{% url 'content:delete-activity' pk=activity.id %}" class="btn btn-danger btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Excluir Atividade">
                           <i class="fas fa-trash"></i>
                         </a>
