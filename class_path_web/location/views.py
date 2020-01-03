@@ -2,11 +2,11 @@ from django.views import generic
 
 from django.urls import reverse_lazy as r
 
-from ..core import base_views
-from . import models, forms
+from ..core import base_views as base_core_views
+from . import base_views, forms, models
 
 
-class CreateLocationView(base_views.BaseFormView, generic.CreateView):
+class CreateLocationView(base_core_views.BaseFormView, generic.CreateView):
     form_class = forms.LocationForm
     template_title = 'Criar Localização'
     success_url = r('location:list-location')
@@ -19,29 +19,29 @@ class CreateLocationView(base_views.BaseFormView, generic.CreateView):
         return super().form_valid(form)
 
 
-class UpdateLocationView(base_views.BaseFormView, generic.UpdateView):
+class UpdateLocationView(
+    base_views.LocationBaseQueryset,
+    base_core_views.BaseFormView,
+    generic.UpdateView):
     form_class = forms.LocationForm
     success_url = r('location:list-location')
     template_title = 'Editar Localização'
     template_name = 'location/location_form.html'
     context_object_name = 'location'
 
-    def get_queryset(self):
-        teacher = self.request.user.teacher
-        locations = teacher.locations.all()
-        return locations
 
-
-class ListLocationView(generic.ListView):
+class ListLocationView(base_views.LocationBaseQueryset, generic.ListView):
     context_object_name = 'locations'
     template_name = 'location/location_list.html'
 
-    def get_queryset(self):
-        teacher = self.request.user.teacher
-        locations = teacher.locations.all()
-        return locations
 
+class DeleteLocationView(
+    base_views.LocationBaseQueryset,
+    base_core_views.BaseDelete):
+
+    success_url = r('location:list-location')
 
 create_location = CreateLocationView.as_view()
 update_location = UpdateLocationView.as_view()
+delete_location = DeleteLocationView.as_view()
 list_location = ListLocationView.as_view()

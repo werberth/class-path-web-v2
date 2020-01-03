@@ -40,7 +40,7 @@
                           data-toggle="tooltip" data-placement="right" title="Editar Localização">
                           <i class="fas fa-edit"></i>
                         </a>
-                        <a href="#" class="btn btn-danger btn-circle"
+                        <a href="{% url 'location:delete-location' pk=location.id %}" class="btn btn-danger btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Excluir Localização">
                           <i class="fas fa-trash"></i>
                         </a>
