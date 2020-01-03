@@ -1,5 +1,5 @@
-from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy as r
@@ -39,6 +39,8 @@ def signup(request):
     return render(request, template_name, context)
 
 @transaction.atomic
+@login_required
+@permission_required('accounts.is_admin')
 def update_teacher(request, pk):
     success_url = r('accounts:list-teacher')
     template_title = 'Editar Profesor'
@@ -73,6 +75,8 @@ def update_teacher(request, pk):
     return render(request, template_name, context)
 
 @transaction.atomic
+@login_required
+@permission_required('accounts.is_admin')
 def update_student(request, pk):
     template_title = 'Editar Student'
     template_name = 'accounts/student/student_form.html'
@@ -114,6 +118,7 @@ def update_student(request, pk):
 # CBVs
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateProgram(base_views.BaseFormView, generic.CreateView):
     form_class = forms.ProgramForm
     success_url = r('accounts:list-program')
@@ -128,6 +133,7 @@ class CreateProgram(base_views.BaseFormView, generic.CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateTeacher(base_views.BaseFormView, generic.CreateView):
     success_url = r('accounts:list-teacher')
     form_class = forms.CustomUserCreationForm
@@ -148,6 +154,8 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateStudent(base_views.BaseFormView, generic.CreateView):
     form_class = forms.CustomUserCreationForm
     template_title = 'Criar Estudante'
@@ -187,6 +195,8 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ListStudent(generic.ListView):
     context_object_name = 'students'
     template_name = 'accounts/student/student_list.html'
@@ -212,6 +222,7 @@ class ListStudent(generic.ListView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateClass(base_views.BaseFormView, generic.CreateView):
     form_class = forms.ClassForm
     template_title = 'Criar Turma'
@@ -248,6 +259,7 @@ class CreateClass(base_views.BaseFormView, generic.CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateCourse(base_views.BaseFormView, generic.CreateView):
     form_class = forms.CourseForm
     template_title = 'Criar Disciplina'
@@ -280,6 +292,8 @@ class CreateCourse(base_views.BaseFormView, generic.CreateView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Teacher
     template_name = 'accounts/teacher/teacher_list.html'
@@ -291,6 +305,7 @@ class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Program
     template_name = 'accounts/program/program_list.html'
@@ -298,6 +313,7 @@ class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Program
     template_name = 'accounts/program/program_list.html'
@@ -305,6 +321,7 @@ class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class UpdateProgram(
     base_views.BaseFormView,
     base_views.BaseInstitutionQuerysetView,
@@ -319,6 +336,7 @@ class UpdateProgram(
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class UpdateClass(base_views.BaseFormView, generic.UpdateView):
     form_class = forms.ClassForm
     template_title = 'Editar Turma'
@@ -336,6 +354,7 @@ class UpdateClass(base_views.BaseFormView, generic.UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class UpdateCourse(base_views.BaseFormView, generic.UpdateView):
     form_class = forms.CourseForm
     template_title = 'Editar Disciplina'
@@ -357,6 +376,8 @@ class UpdateCourse(base_views.BaseFormView, generic.UpdateView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ClassList(generic.ListView):
     model = models.Class
     context_object_name = 'classes'
@@ -376,6 +397,8 @@ class ClassList(generic.ListView):
         return program.classes.all()
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ListCourse(generic.ListView):
     model = models.Course
     context_object_name = 'courses'
@@ -394,6 +417,8 @@ class ListCourse(generic.ListView):
         return class_instance.courses.all()
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class DeleteCourseView(generic.DeleteView):
 
     def get(self, request, *args, **kwargs):
@@ -415,6 +440,8 @@ class DeleteCourseView(generic.DeleteView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class DeleteClassView(generic.DeleteView):
 
     def get(self, request, *args, **kwargs):
@@ -430,6 +457,8 @@ class DeleteClassView(generic.DeleteView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class DeleteTeacherView(generic.DeleteView):
     success_url = r('accounts:list-teacher')
 
@@ -453,6 +482,8 @@ class DeleteTeacherView(generic.DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class DeleteStudentView(generic.DeleteView):
 
     def get(self, request, *args, **kwargs):
