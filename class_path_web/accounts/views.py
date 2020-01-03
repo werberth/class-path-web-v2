@@ -416,6 +416,15 @@ class UpdateCourse(base_core_views.BaseFormView, generic.UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+class DeleteProgramView(base_core_views.BaseDelete):
+    success_url = r('accounts:list-program')
+
+    def get_queryset(self):
+        programs = self.request.user.admin.institution.programs.all()
+        return programs
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class DeleteCourseView(base_core_views.BaseDelete):
 
     def get_queryset(self):
@@ -545,6 +554,7 @@ list_course = ListCourse.as_view()
 list_teacher_courses = TeacherListCourse.as_view()
 list_class_students = ListClassStudents.as_view()
 # delete
+delete_program = DeleteProgramView.as_view()
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
 delete_student = DeleteStudentView.as_view()

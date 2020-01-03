@@ -51,7 +51,7 @@
                         data-placement="right" title="Editar Curso">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="#" class="btn btn-danger btn-circle" data-toggle="tooltip"
+                      <a href="{% url 'accounts:delete-program' pk=program.id %}" class="btn btn-danger btn-circle" data-toggle="tooltip"
                         data-placement="right" title="Excluir Curso">
                         <i class="fas fa-trash"></i>
                       </a>

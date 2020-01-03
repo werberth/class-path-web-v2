@@ -37,6 +37,7 @@ urlpatterns = [
     path('students/<int:class>/', views.list_student, name='list-student'),
     path('courses/<int:class>/', views.list_course, name='list-course'),
     # delete
+    path('delete-program/<int:pk>/', views.delete_program, name='delete-program'),
     path('delete-class/<int:pk>/', views.delete_class, name='delete-class'),
     path('delete-teacher/<int:pk>/', views.delete_teacher, name='delete-teacher'),
     path('delete-student/<int:pk>/', views.delete_student, name='delete-student'),
