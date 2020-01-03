@@ -24,10 +24,24 @@ class CreateContentView(base_core_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
+class UpdateContentView(
+    base_views.ContentBaseQueryset,
+    base_core_views.BaseFormView,
+    generic.UpdateView):
+    form_class = forms.ContentForm
+    success_url = r('content:list-content')
+    template_title = 'Editar Conteúdo'
+    template_name = 'content/content_form.html'
+    context_object_name = 'content'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
 class ListLocationView(base_views.ContentBaseQueryset, generic.ListView):
     context_object_name = 'contents'
     template_name = 'location/content_list.html'
 
 
 create_content = CreateContentView.as_view()
+update_content = UpdateContentView.as_view()
 list_content = ListLocationView.as_view()

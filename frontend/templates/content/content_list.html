@@ -36,7 +36,7 @@
                 <tr>
                     <td><span class="font-weight-bold" data-content-id="{{ content.id }}">{{ content.title }}</span></td>
                     <td>
-                        <a href="#" class="btn btn-edit btn-warning btn-circle"
+                        <a href="{% url 'content:update-content' pk=content.id %}" class="btn btn-edit btn-warning btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Editar Conteúdo">
                           <i class="fas fa-edit"></i>
                         </a>
