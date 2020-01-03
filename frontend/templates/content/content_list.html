@@ -40,7 +40,7 @@
                           data-toggle="tooltip" data-placement="right" title="Editar Conteúdo">
                           <i class="fas fa-edit"></i>
                         </a>
-                        <a href="#" class="btn btn-danger btn-circle"
+                        <a href="{% url 'content:delete-content' pk=content.id %}" class="btn btn-danger btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Excluir Conteúdo">
                           <i class="fas fa-trash"></i>
                         </a>

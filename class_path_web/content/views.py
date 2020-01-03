@@ -42,6 +42,16 @@ class ListLocationView(base_views.ContentBaseQueryset, generic.ListView):
     template_name = 'location/content_list.html'
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
+class DeleteLocationView(
+    base_views.ContentBaseQueryset,
+    base_core_views.BaseDelete):
+
+    success_url = r('content:list-content')
+
+
 create_content = CreateContentView.as_view()
 update_content = UpdateContentView.as_view()
 list_content = ListLocationView.as_view()
+delete_content = DeleteLocationView.as_view()
