@@ -117,6 +117,8 @@ def update_student(request, pk):
 
 # CBVs
 
+# Create Views
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateProgram(base_views.BaseFormView, generic.CreateView):
@@ -197,32 +199,6 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class ListStudent(generic.ListView):
-    context_object_name = 'students'
-    template_name = 'accounts/student/student_list.html'
-
-    def get_object(self, queryset=None):
-        institution = self.request.user.admin.institution
-        program_ids = institution.programs.values_list('id', flat=True)
-        _class = get_object_or_404(
-            models.Class,
-            pk=self.kwargs['class'],
-            program__in=program_ids
-        )
-        return _class
-
-    def get_context_data(self,**kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['class'] = self.get_object()
-        return kwargs
-
-    def get_queryset(self):
-        _class = self.get_object()
-        return _class.students.filter(is_active=True)
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateClass(base_views.BaseFormView, generic.CreateView):
     form_class = forms.ClassForm
     template_title = 'Criar Turma'
@@ -292,6 +268,34 @@ class CreateCourse(base_views.BaseFormView, generic.CreateView):
         return url
 
 
+# List Views
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+class ListStudent(generic.ListView):
+    context_object_name = 'students'
+    template_name = 'accounts/student/student_list.html'
+
+    def get_object(self, queryset=None):
+        institution = self.request.user.admin.institution
+        program_ids = institution.programs.values_list('id', flat=True)
+        _class = get_object_or_404(
+            models.Class,
+            pk=self.kwargs['class'],
+            program__in=program_ids
+        )
+        return _class
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['class'] = self.get_object()
+        return kwargs
+
+    def get_queryset(self):
+        _class = self.get_object()
+        return _class.students.filter(is_active=True)
+
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class ListTeacher(base_views.BaseInstitutionQuerysetView, generic.ListView):
@@ -318,6 +322,50 @@ class ListProgram(base_views.BaseInstitutionQuerysetView, generic.ListView):
     model = models.Program
     template_name = 'accounts/program/program_list.html'
     context_object_name = 'programs'
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+class ClassList(generic.ListView):
+    model = models.Class
+    context_object_name = 'classes'
+    template_name = 'accounts/class/class_list.html'
+
+    def get_object(self, queryset=None):
+        program_id = self.kwargs['program']
+        return get_object_or_404(models.Program, pk=program_id)
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['program'] = self.get_object()
+        return kwargs
+
+    def get_queryset(self):
+        program = self.get_object()
+        return program.classes.all()
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+class ListCourse(generic.ListView):
+    model = models.Course
+    context_object_name = 'courses'
+    template_name = 'accounts/course/course_list.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(models.Class, pk=self.kwargs['class'])
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['class'] = self.get_object()
+        return kwargs
+
+    def get_queryset(self):
+        class_instance = self.get_object()
+        return class_instance.courses.all()
+
+
+# Update Views
 
 
 @method_decorator(login_required, name='dispatch')
@@ -376,45 +424,7 @@ class UpdateCourse(base_views.BaseFormView, generic.UpdateView):
         return url
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class ClassList(generic.ListView):
-    model = models.Class
-    context_object_name = 'classes'
-    template_name = 'accounts/class/class_list.html'
-
-    def get_object(self, queryset=None):
-        program_id = self.kwargs['program']
-        return get_object_or_404(models.Program, pk=program_id)
-
-    def get_context_data(self,**kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['program'] = self.get_object()
-        return kwargs
-
-    def get_queryset(self):
-        program = self.get_object()
-        return program.classes.all()
-
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class ListCourse(generic.ListView):
-    model = models.Course
-    context_object_name = 'courses'
-    template_name = 'accounts/course/course_list.html'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(models.Class, pk=self.kwargs['class'])
-
-    def get_context_data(self,**kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['class'] = self.get_object()
-        return kwargs
-
-    def get_queryset(self):
-        class_instance = self.get_object()
-        return class_instance.courses.all()
+# Delete Views
 
 
 @method_decorator(login_required, name='dispatch')

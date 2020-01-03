@@ -35,16 +35,26 @@
 
       <hr class="sidebar-divider my-0">
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'accounts:list-program' %}">
-            <i class="fas fa-fw fa-graduation-cap"></i>
-          <span>Cursos</span></a>
-      </li>
-      <li class="nav-item">
+      {% if perms.accounts.is_admin %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:list-program' %}">
+              <i class="fas fa-fw fa-graduation-cap"></i>
+            <span>Cursos</span></a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="{% url 'accounts:list-teacher' %}">
             <i class="fas fa-chalkboard-teacher"></i>
             <span>Professores</span></a>
         </li>
+
+      {% elif perms.accounts.is_teacher %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:list-teacher' %}">
+            <i class="fas fa-chalkboard"></i>
+            <span>Disciplinas</span></a>
+        </li>
+      {% endif %}
 
       <hr class="sidebar-divider d-none d-md-block">
 
