@@ -335,6 +335,28 @@ class UpdateClass(base_views.BaseFormView, generic.UpdateView):
         return url
 
 
+@method_decorator(login_required, name='dispatch')
+class UpdateCourse(base_views.BaseFormView, generic.UpdateView):
+    form_class = forms.CourseForm
+    template_title = 'Editar Disciplina'
+    template_name = 'accounts/course/course_form.html'
+
+    def get_queryset(self):
+        programs = self.request.user.admin.institution.programs.all()
+        classes = models.Class.objects.filter(program__in=programs)
+        courses = models.Course.objects.filter(class_id__in=classes)
+        return courses
+
+    def get_success_url(self):
+        url = r(
+            'accounts:list-course',
+            kwargs={
+                'class': self.object.class_id.id
+            }
+        )
+        return url
+
+
 class ClassList(generic.ListView):
     model = models.Class
     context_object_name = 'classes'
@@ -450,6 +472,7 @@ create_course = CreateCourse.as_view()
 # update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
+update_course = UpdateCourse.as_view()
 # list
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()

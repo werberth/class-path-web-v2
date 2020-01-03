@@ -35,19 +35,20 @@
                       </span>
                     </td>
                     <td>
-                      <a href="{% url 'accounts:list-class' program=program.id %}"
+                      <a href="{% url 'accounts:list-class' program=program.id %}" title="Turmas"
                         class="btn btn-info btn-icon-split" data-toggle="tooltip" data-placement="right">
                         <span class="icon text-white-50">
                             <i class="fas fa-chalkboard"></i>
                         </span>
                         <span class="text">Turmas</span>
                       </a>
-                      <a href="{% url 'accounts:update-program' pk=program.id %}" class="btn btn-edit btn-warning btn-circle" title="Editar"
-                        data-toggle="tooltip" data-placement="right" title="Editar Curso">
+                      <a href="{% url 'accounts:update-program' pk=program.id %}"
+                        class="btn btn-edit btn-warning btn-circle" data-toggle="tooltip"
+                        data-placement="right" title="Editar Curso">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="#" class="btn btn-danger btn-circle" title="Excluir Curso"
-                        data-toggle="tooltip" data-placement="right" title="Excluir Curso">
+                      <a href="#" class="btn btn-danger btn-circle" data-toggle="tooltip"
+                        data-placement="right" title="Excluir Curso">
                         <i class="fas fa-trash"></i>
                       </a>
                     </td>

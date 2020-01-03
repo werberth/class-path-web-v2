@@ -31,11 +31,11 @@
                 <tr>
                     <td><span class="font-weight-bold" data-teacher-id="{{ teacher.id }}">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</span></td>
                     <td>
-                      <a href="{% url 'accounts:update-teacher' pk=teacher.pk %}" class="btn btn-edit btn-warning btn-circle" title="Editar"
+                      <a href="{% url 'accounts:update-teacher' pk=teacher.pk %}" class="btn btn-edit btn-warning btn-circle"
                         data-toggle="tooltip" data-placement="right" title="Editar Professor">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="{% url 'accounts:delete-teacher' pk=teacher.user.pk %}" class="btn btn-danger btn-circle" title="Excluir Professor"
+                      <a href="{% url 'accounts:delete-teacher' pk=teacher.user.pk %}" class="btn btn-danger btn-circle"
                         data-toggle="tooltip" data-placement="right" title="Excluir Professor">
                         <i class="fas fa-trash"></i>
                       </a>

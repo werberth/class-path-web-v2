@@ -37,7 +37,12 @@
                 </div>
                 <div class="col-xl-2 float-right">
                     <a class="btn btn-secondary btn-user btn-block"
-                    href="{% url 'accounts:list-course' class=class.id %}">
+                    {% if class %}
+                        href="{% url 'accounts:list-course' class=class.id %}"
+                    {% else %}
+                        href="{% url 'accounts:list-course' class=course.class_id.id %}"
+                    {% endif %}
+                    >
                         Voltar
                     </a>
                 </div>
