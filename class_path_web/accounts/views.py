@@ -394,6 +394,27 @@ class ListCourse(generic.ListView):
         return class_instance.courses.all()
 
 
+class DeleteCourseView(generic.DeleteView):
+
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def get_queryset(self):
+        programs = self.request.user.admin.institution.programs.all()
+        classes = models.Class.objects.filter(program__in=programs)
+        courses = models.Course.objects.filter(class_id__in=classes)
+        return courses
+
+    def get_success_url(self):
+        url = r(
+            'accounts:list-course',
+            kwargs={
+                'class': self.object.class_id.id
+            }
+        )
+        return url
+
+
 class DeleteClassView(generic.DeleteView):
 
     def get(self, request, *args, **kwargs):
@@ -483,3 +504,4 @@ list_course = ListCourse.as_view()
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
 delete_student = DeleteStudentView.as_view()
+delete_course = DeleteCourseView.as_view()

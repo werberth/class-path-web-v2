@@ -39,7 +39,7 @@
                         data-toggle="tooltip" data-placement="right" title="Editar Disciplina">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="#" class="btn btn-danger btn-circle" data-toggle="tooltip"
+                      <a href="{% url 'accounts:delete-course' pk=course.id %}" class="btn btn-danger btn-circle" data-toggle="tooltip"
                         data-placement="right" title="Excluir Disciplina">
                         <i class="fas fa-trash"></i>
                       </a>
