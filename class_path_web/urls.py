@@ -13,5 +13,12 @@ urlpatterns = [
             ('class_path_web.accounts.urls', 'accounts'),
             namespace="accounts"
         )
+    ),
+    path(
+        'location/',
+        include(
+            ('class_path_web.location.urls', 'location'),
+            namespace="location"
+        )
     )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

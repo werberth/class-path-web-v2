@@ -6,6 +6,7 @@ from django.urls import reverse_lazy as r
 from django.utils.decorators import method_decorator
 from django.views import generic
 
+from ..core import base_views as base_core_views
 from . import base_views, forms, models, utils
 
 # FBVs
@@ -121,7 +122,7 @@ def update_student(request, pk):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class CreateProgram(base_views.BaseFormView, generic.CreateView):
+class CreateProgram(base_core_views.BaseFormView, generic.CreateView):
     form_class = forms.ProgramForm
     success_url = r('accounts:list-program')
     template_title = 'Criar Curso'
@@ -136,7 +137,7 @@ class CreateProgram(base_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class CreateTeacher(base_views.BaseFormView, generic.CreateView):
+class CreateTeacher(base_core_views.BaseFormView, generic.CreateView):
     success_url = r('accounts:list-teacher')
     form_class = forms.CustomUserCreationForm
     template_title = 'Criar Professor'
@@ -158,7 +159,7 @@ class CreateTeacher(base_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class CreateStudent(base_views.BaseFormView, generic.CreateView):
+class CreateStudent(base_core_views.BaseFormView, generic.CreateView):
     form_class = forms.CustomUserCreationForm
     template_title = 'Criar Estudante'
     template_name = 'accounts/student/student_form.html'
@@ -199,7 +200,7 @@ class CreateStudent(base_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class CreateClass(base_views.BaseFormView, generic.CreateView):
+class CreateClass(base_core_views.BaseFormView, generic.CreateView):
     form_class = forms.ClassForm
     template_title = 'Criar Turma'
     template_name = 'accounts/class/class_form.html'
@@ -236,7 +237,7 @@ class CreateClass(base_views.BaseFormView, generic.CreateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class CreateCourse(base_views.BaseFormView, generic.CreateView):
+class CreateCourse(base_core_views.BaseFormView, generic.CreateView):
     form_class = forms.CourseForm
     template_title = 'Criar Disciplina'
     template_name = 'accounts/course/course_form.html'
@@ -357,7 +358,7 @@ class ListCourse(base_views.ListCourseBase):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class UpdateProgram(
-    base_views.BaseFormView,
+    base_core_views.BaseFormView,
     base_views.BaseInstitutionQuerysetView,
     generic.UpdateView):
 
@@ -371,7 +372,7 @@ class UpdateProgram(
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class UpdateClass(base_views.BaseFormView, generic.UpdateView):
+class UpdateClass(base_core_views.BaseFormView, generic.UpdateView):
     form_class = forms.ClassForm
     template_title = 'Editar Turma'
     template_name = 'accounts/class/class_form.html'
@@ -389,7 +390,7 @@ class UpdateClass(base_views.BaseFormView, generic.UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class UpdateCourse(base_views.BaseFormView, generic.UpdateView):
+class UpdateCourse(base_core_views.BaseFormView, generic.UpdateView):
     form_class = forms.CourseForm
     template_title = 'Editar Disciplina'
     template_name = 'accounts/course/course_form.html'
@@ -415,10 +416,7 @@ class UpdateCourse(base_views.BaseFormView, generic.UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class DeleteCourseView(generic.DeleteView):
-
-    def get(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+class DeleteCourseView(base_core_views.BaseDelete):
 
     def get_queryset(self):
         programs = self.request.user.admin.institution.programs.all()
@@ -438,10 +436,7 @@ class DeleteCourseView(generic.DeleteView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class DeleteClassView(generic.DeleteView):
-
-    def get(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+class DeleteClassView(base_core_views.BaseDelete):
 
     def get_queryset(self):
         institution = self.request.user.admin.institution
@@ -455,11 +450,8 @@ class DeleteClassView(generic.DeleteView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class DeleteTeacherView(generic.DeleteView):
+class DeleteTeacherView(base_core_views.BaseDelete):
     success_url = r('accounts:list-teacher')
-
-    def get(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
 
     def get_queryset(self):
         institution = self.request.user.admin.institution
@@ -480,10 +472,7 @@ class DeleteTeacherView(generic.DeleteView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class DeleteStudentView(generic.DeleteView):
-
-    def get(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+class DeleteStudentView(base_core_views.BaseDelete):
 
     def get_queryset(self):
         classes_id = utils.get_classes(self.request.user)
@@ -511,6 +500,7 @@ class DeleteStudentView(generic.DeleteView):
 
 
 # Teacher Views
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
 class TeacherListCourse(base_views.ListCourseBase):

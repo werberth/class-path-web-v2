@@ -1,7 +1,7 @@
-from . import models
-
 from django.views import generic
 from django.shortcuts import get_object_or_404
+
+from . import models
 
 
 class BaseInstitutionQuerysetView:
@@ -9,20 +9,6 @@ class BaseInstitutionQuerysetView:
         institution = self.request.user.admin.institution
         queryset = self.model.objects.filter(institution=institution)
         return queryset
-
-
-class BaseDelete(generic.DeleteView):
-    def get(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
-
-
-class BaseFormView:
-    template_title = None
-
-    def get_context_data(self, **kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['template_title'] = self.template_title
-        return kwargs
 
 
 class ListCourseBase(generic.ListView):
