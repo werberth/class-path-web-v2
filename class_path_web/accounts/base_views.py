@@ -22,3 +22,9 @@ class BaseFormView:
         kwargs = super().get_context_data(**kwargs)
         kwargs['template_title'] = self.template_title
         return kwargs
+
+
+class ListCourseBase(generic.ListView):
+    model = models.Course
+    context_object_name = 'courses'
+    template_name = 'accounts/course/course_list.html'

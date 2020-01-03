@@ -9,16 +9,25 @@
 
 {% block content %}
     <h1 class="h1 mb-2 text-gray-800">Disciplinas</h1>
-    <p class="mb-4">Lista de disciplinas vinculadas a turma {{ class.name }}.<br>
-      <a href="{% url 'accounts:create-course' class=class.id %}">
-        <i class="fas fa-plus-circle"></i>
-        Clique aqui para adicionar
-      </a><br>
-      <a href="{% url 'accounts:list-class' program=class.program.id %}">
-        <i class="fas fa-arrow-circle-left"></i>
-        Voltar a listagem de turmas
-      </a>
-    </p>
+    {% if class %}
+      <p class="mb-4">Lista de disciplinas vinculadas a turma {{ class.name }}.<br>
+        <a href="{% url 'accounts:create-course' class=class.id %}">
+          <i class="fas fa-plus-circle"></i>
+          Clique aqui para adicionar
+        </a><br>
+        <a href="{% url 'accounts:list-class' program=class.program.id %}">
+          <i class="fas fa-arrow-circle-left"></i>
+          Voltar a listagem de turmas
+        </a>
+      </p>
+    {% else %}
+      <p>
+        <a href="{% url 'core:dashboard' %}">
+          <i class="fas fa-arrow-circle-left"></i>
+          Voltar a pagina inicial
+        </a>
+      </p>
+    {% endif %}
 
     <div class="card shadow mb-4">
       <div class="card-body">

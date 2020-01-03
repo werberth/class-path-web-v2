@@ -31,6 +31,7 @@ urlpatterns = [
     # list
     path('programs/', views.list_program, name='list-program'),
     path('teachers/', views.list_teacher, name='list-teacher'),
+    path('teacher-courses/', views.list_teacher_courses, name='list-teacher-courses'),
     path('classes/<int:program>/', views.list_class, name='list-class'),
     path('students/<int:class>/', views.list_student, name='list-student'),
     path('courses/<int:class>/', views.list_course, name='list-course'),

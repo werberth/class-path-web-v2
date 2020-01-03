@@ -347,10 +347,7 @@ class ClassList(generic.ListView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class ListCourse(generic.ListView):
-    model = models.Course
-    context_object_name = 'courses'
-    template_name = 'accounts/course/course_list.html'
+class ListCourse(base_views.ListCourseBase):
 
     def get_object(self, queryset=None):
         return get_object_or_404(models.Class, pk=self.kwargs['class'])
@@ -524,6 +521,16 @@ class DeleteStudentView(generic.DeleteView):
         return url
 
 
+# Teacher Views
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
+class TeacherListCourse(base_views.ListCourseBase):
+    def get_queryset(self):
+        teacher = self.request.user.teacher
+        courses = models.Course.objects.filter(teacher=teacher)
+        return courses
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -541,6 +548,7 @@ list_teacher = ListTeacher.as_view()
 list_class = ClassList.as_view()
 list_student = ListStudent.as_view()
 list_course = ListCourse.as_view()
+list_teacher_courses = TeacherListCourse.as_view()
 # delete
 delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
