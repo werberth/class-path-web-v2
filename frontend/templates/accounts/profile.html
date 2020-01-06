@@ -1,6 +1,10 @@
 {% extends 'dashboard_base.html' %}
 {% load static %}
 
+{% block title %}
+  Perfil
+{% endblock %}
+
 {% block content %}
 
 <div>
@@ -52,7 +56,7 @@
                                 <div class="col mr-2">
                                     <div class="font-weight-bold mb-1">
                                         <p>Street: {{ address.street }}</p>
-                                        <p>Number: {{ address.number }}</p>
+                                        <p>Number: {{ address.number|default_if_none:"S/N" }}</p>
                                         <p>Neighborhood: {{ address.neighborhood }}</p>
                                         {% if address.complement %}
                                             <p>Complement: {{ address.complement }}</p>

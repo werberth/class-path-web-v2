@@ -54,6 +54,10 @@ class ProfileForm(ModelForm):
 
 
 class AddressForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['number'].required = False
+
     class Meta:
         model = models.Address
         fields = (

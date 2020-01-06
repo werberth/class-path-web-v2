@@ -302,7 +302,7 @@ class CreateCourse(base_core_views.BaseFormView, generic.CreateView):
         return kwargs
 
     def get_success_url(self):
-        url = r('accounts:list-class', kwargs={'program': self._class.program.id})
+        url = r('accounts:list-course', kwargs={'class': self._class.id})
         return url
 
 

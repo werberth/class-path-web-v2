@@ -160,7 +160,7 @@ class Address(models.Model):
     city = models.CharField(_('city'), max_length=100)
     street = models.CharField(_('street'), max_length=250)
     neighborhood = models.CharField(_('neighborhood'), max_length=100)
-    number = models.IntegerField(_('number'))
+    number = models.IntegerField(_('number'), null=True)
     postal_code = models.CharField(_('postal code'), max_length=250)
     complement = models.CharField(
         _('complement'),

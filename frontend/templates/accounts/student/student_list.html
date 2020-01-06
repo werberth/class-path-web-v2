@@ -35,7 +35,7 @@
         <p class="mb-4">
           <a href="{% url 'accounts:list-teacher-courses' %}">
             <i class="fas fa-arrow-circle-left"></i>
-            Voltar a pagina inicial
+            Voltar a listagem de disciplinas
           </a>
         </p>
       {% endif %}
@@ -72,7 +72,7 @@
                         </a>
                       </td>
                     {% elif perms.accounts.is_teacher %}
-                      {% with student|get_scores:course.id as scores %}
+                      {% with student|get_scores:course as scores %}
                         <td>
                           {{ scores.first_score|default_if_none:"---" }}
                         </td>
