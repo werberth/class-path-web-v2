@@ -28,12 +28,17 @@ urlpatterns = [
     path('update_class/<int:pk>/', views.update_class, name='update-class'),
     path('update-student/<int:pk>/', views.update_student, name='update-student'),
     path('update-course/<int:pk>/', views.update_course, name='update-course'),
+    path(
+        'define-scores/<int:student>/<int:course>/',
+        views.define_scores,
+        name='define-scores'
+    ),
     # list
     path('programs/', views.list_program, name='list-program'),
     path('teachers/', views.list_teacher, name='list-teacher'),
     path('teacher-courses/', views.list_teacher_courses, name='list-teacher-courses'),
     path('classes/<int:program>/', views.list_class, name='list-class'),
-    path('class/<int:class>/', views.list_class_students, name='list-class-students'),
+    path('class/<int:course>/', views.list_class_students, name='list-class-students'),
     path('students/<int:class>/', views.list_student, name='list-student'),
     path('courses/<int:class>/', views.list_course, name='list-course'),
     # delete

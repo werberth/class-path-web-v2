@@ -204,3 +204,27 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Scores(models.Model):
+    first_score = models.FloatField(_('first score'), null=True)
+    second_score = models.FloatField(_('second score'), null=True)
+    third_score = models.FloatField(_('third score'), null=True)
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        related_name="scores"
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="scores"
+    )
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    modified_at = models.DateTimeField(_('modified at'), auto_now=True)
+
+    class Meta:
+        db_table = 'scores'
+
+    def __str__(self):
+        return self.name

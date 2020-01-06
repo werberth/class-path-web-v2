@@ -13,12 +13,12 @@ from . import base_views, forms, models, utils
 
 @transaction.atomic
 def signup(request):
-    success_url = r('core:login')
+    success_url = r('accounts:login')
     template_name = 'accounts/signup.html'
     user_form = forms.CustomUserCreationForm()
     institution_form = forms.InstitutionForm()
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect(r('core:dashboard'))
 
     if request.method == "POST":
@@ -31,6 +31,8 @@ def signup(request):
             # create admin user
             user_form.cleaned_data['is_admin'] = True
             user = user_form.save()
+            user.admin.institution = institution
+            user.admin.save()
             return redirect(success_url)
 
     context = {
@@ -523,15 +525,81 @@ class TeacherListCourse(base_views.ListCourseBase):
 @method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
 class ListClassStudents(base_views.ListStudentBase, generic.ListView):
 
-    def get_object(self, queryset=None):
+    @property
+    def course(self):
         teacher = self.request.user.teacher
-        classes = teacher.courses.values_list('class_id__id',flat=True)
-        _class = get_object_or_404(
-            models.Class,
-            pk=self.kwargs['class'],
-            pk__in=classes
+        course = get_object_or_404(
+            models.Course,
+            pk=self.kwargs['course'],
+            teacher=teacher
         )
-        return _class
+        return course
+
+    def get_object(self, queryset=None):
+        return self.course.class_id
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['course'] = self.course
+        return kwargs
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.is_teacher'), name='dispatch')
+class DefineStudentScore(generic.UpdateView):
+    form_class = forms.ScoreForm
+    context_object_name = 'score'
+    template_name = 'accounts/student/student_score_form.html'
+
+    @property
+    def teacher(self):
+        teacher = self.request.user.teacher
+        return teacher
+
+    @property
+    def student(self):
+        student_pk = self.kwargs['student']
+        classes = self.teacher.courses.values_list('class_id__id',flat=True)
+        student = get_object_or_404(
+            models.Student,
+            pk=student_pk,
+            class_id__id__in=classes
+        )
+        return student
+
+    @property
+    def course(self):
+        course_pk = self.kwargs['course']
+        courses = self.teacher.courses.values_list('id',flat=True)
+        course = get_object_or_404(
+            models.Course,
+            pk=course_pk,
+            pk__in=courses
+        )
+        return course
+
+    def get_object(self):
+        scores, _ = models.Scores.objects.get_or_create(
+            student=self.student,
+            course=self.course
+        )
+        return scores
+
+    def form_valid(self, form):
+        score = form.save(commit=False)
+        score.student = self.student
+        score.course = self.course
+        self.object = score.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        url = r(
+            'accounts:list-class-students',
+            kwargs={
+                'course': self.course.id
+            }
+        )
+        return url
 
 
 # define CBVs as FBVs
@@ -545,6 +613,7 @@ create_course = CreateCourse.as_view()
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
 update_course = UpdateCourse.as_view()
+define_scores = DefineStudentScore.as_view()
 # list
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()

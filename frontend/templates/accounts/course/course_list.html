@@ -54,7 +54,7 @@
                           <i class="fas fa-trash"></i>
                         </a>
                       {% elif perms.accounts.is_teacher %}
-                        <a href="{% url 'accounts:list-class-students' class=course.class_id.id %}" title="Turma"
+                        <a href="{% url 'accounts:list-class-students' course=course.id %}" title="Turma"
                           class="btn btn-info btn-icon-split" data-toggle="tooltip" data-placement="right">
                           <span class="icon text-white-50">
                               <i class="fas fa-chalkboard"></i>

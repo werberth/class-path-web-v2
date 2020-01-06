@@ -1,5 +1,6 @@
 {% extends 'dashboard_base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
   {% if perms.accounts.is_admin  %}
@@ -47,6 +48,11 @@
             <thead>
               <tr>
                 <th>Nome</th>
+                {% if perms.accounts.is_teacher %}
+                  <th>Primeira Nota</th>
+                  <th>Segunda Nota</th>
+                  <th>Teceira Nota</th>
+                {% endif %}
                 <th>Ações</th>
               </tr>
             </thead>
@@ -54,8 +60,8 @@
               {% for student in students %}
                 <tr>
                     <td><span class="font-weight-bold" data-class-id="{{ class.id }}">{{ student.user.first_name }} {{ student.user.last_name }}</span></td>
-                    <td>
-                      {% if perms.accounts.is_admin %}
+                    {% if perms.accounts.is_admin %}
+                      <td>
                         <a href="{% url 'accounts:update-student' pk=student.pk %}" class="btn btn-edit btn-warning btn-circle" title="Editar Estudante"
                           data-toggle="tooltip" data-placement="right" title="Editar Estudante">
                           <i class="fas fa-edit"></i>
@@ -64,7 +70,26 @@
                           data-toggle="tooltip" data-placement="right" title="Excluir Estudante">
                           <i class="fas fa-trash"></i>
                         </a>
-                      {% endif %}
+                      </td>
+                    {% elif perms.accounts.is_teacher %}
+                      {% with student|get_scores:course.id as scores %}
+                        <td>
+                          {{ scores.first_score|default_if_none:"---" }}
+                        </td>
+                        <td>
+                          {{ scores.second_score|default_if_none:"---" }}
+                        </td>
+                        <td>
+                          {{ scores.third_score|default_if_none:"---" }}
+                        </td>
+                      {% endwith %}
+                      <td>
+                        <a href="{% url 'accounts:define-scores' course=course.id student=student.id %}" class="btn btn-success btn-circle"
+                          data-toggle="tooltip" data-placement="right" title="Editar notas do estudante">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                      </td>
+                    {% endif %}
                     </td>
                 </tr>
               {% endfor %}

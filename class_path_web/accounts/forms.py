@@ -77,3 +77,17 @@ class CourseForm(ModelForm):
             'teacher'
         )
 
+
+class ScoreForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_score'].required = False
+        self.fields['second_score'].required = False
+        self.fields['third_score'].required = False
+
+    class Meta:
+        model = models.Scores
+        fields = (
+            'first_score', 'second_score',
+            'third_score',
+        )
