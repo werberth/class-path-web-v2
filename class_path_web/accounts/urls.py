@@ -30,6 +30,7 @@ urlpatterns = [
     path('update-student/<int:pk>/', views.update_student, name='update-student'),
     path('update-course/<int:pk>/', views.update_course, name='update-course'),
     path('update-profile/', views.update_profile, name='update_profile'),
+    path('update-address/<int:pk>/', views.update_address, name='update_address'),
     path(
         'define-scores/<int:student>/<int:course>/',
         views.define_scores,
@@ -49,6 +50,7 @@ urlpatterns = [
     path('delete-teacher/<int:pk>/', views.delete_teacher, name='delete-teacher'),
     path('delete-student/<int:pk>/', views.delete_student, name='delete-student'),
     path('delete-course/<int:pk>/', views.delete_course, name='delete-course'),
+    path('delete-address/<int:pk>/', views.delete_address, name='delete-address'),
     # detail
     path('profile/', views.profile_view, name='profile'),
 ]

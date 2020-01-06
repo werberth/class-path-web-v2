@@ -667,6 +667,25 @@ class CreateAddress(base_core_views.BaseFormView, generic.CreateView):
         self.object = address.save()
         return super().form_valid(form)
 
+class UpdateAddressView(base_core_views.BaseFormView, generic.UpdateView):
+    form_class = forms.AddressForm
+    success_url = r('accounts:profile')
+    template_title = 'Editar Endereço'
+    template_name = 'accounts/address/address_form.html'
+
+    def get_queryset(self):
+        addresses = self.request.user.addresses.all()
+        return addresses
+
+
+@method_decorator(login_required, name='dispatch')
+class DeleteAddressView(base_core_views.BaseDelete):
+    success_url = r('accounts:profile')
+
+    def get_queryset(self):
+        addresses = self.request.user.addresses.all()
+        return addresses
+
 
 # define CBVs as FBVs
 # create
@@ -681,6 +700,7 @@ update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
 update_course = UpdateCourse.as_view()
 define_scores = DefineStudentScore.as_view()
+update_address = UpdateAddressView.as_view()
 # list
 list_program = ListProgram.as_view()
 list_teacher = ListTeacher.as_view()
@@ -695,5 +715,6 @@ delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
 delete_student = DeleteStudentView.as_view()
 delete_course = DeleteCourseView.as_view()
+delete_address = DeleteAddressView.as_view()
 # detail
 profile_view = ProfileView.as_view()

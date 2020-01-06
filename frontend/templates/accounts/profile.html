@@ -60,6 +60,18 @@
                                         <p>City: {{ address.city }}</p>
                                         <p>State: {{ address.state }}</p>
                                         <p>Postal Code: {{ address.postal_code }}</p>
+                                        <p>
+                                          <a href="{% url 'accounts:update_address' pk=address.id %}">
+                                            <i class="fas fa-edit edit"></i>
+                                            Editar
+                                          </a>
+                                        </p>
+                                        <p>
+                                          <a href="{% url 'accounts:delete-address' pk=address.id %}">
+                                              <i class="fas fa-trash trash"></i>
+                                              Excluir
+                                          </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
