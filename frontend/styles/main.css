@@ -8,3 +8,10 @@
 .img-profile {
     color: black;
 }
+
+.profile-foto {
+    height: 200px !important;
+    width: 200px  !important;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}

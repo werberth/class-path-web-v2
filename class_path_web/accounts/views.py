@@ -636,6 +636,23 @@ class DefineStudentScore(generic.UpdateView):
         return url
 
 
+# comum users views
+
+class ProfileView(generic.DetailView):
+    context_object_name = 'profile'
+    template_name = 'accounts/profile.html'
+
+    def get_object(self):
+        user = self.request.user
+
+        if user.has_perm('accounts.is_admin'):
+            return user.admin
+        if user.has_perm('accounts.is_teacher'):
+            return user.teacher
+        if user.has_perm('accounts.is_student'):
+            return user.student
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -662,3 +679,5 @@ delete_class = DeleteClassView.as_view()
 delete_teacher = DeleteTeacherView.as_view()
 delete_student = DeleteStudentView.as_view()
 delete_course = DeleteCourseView.as_view()
+# detail
+profile_view = ProfileView.as_view()

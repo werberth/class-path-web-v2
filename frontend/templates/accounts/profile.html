@@ -1,0 +1,35 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div>
+    <img class="profile-foto" src="{% static 'media/profile.png' %}">
+    <p>
+        <h5>
+            <i class="fas fa-edit"></i>
+            <a href="{% url 'accounts:update_profile' %}">Editar Perfil</a>
+        </h5>
+    </p>
+    {% if profile.user.registration_number %}
+        <p class="mb-4"><strong>Username / Numero de Matricula:</strong> {{ profile.user.registration_number }}</p>
+    {% endif %}
+
+    {% if profile.user.first_name  %}
+        <p class="mb-4"><strong>Nome:</strong> {{ profile.user.first_name  }}</p>
+    {% endif %}
+
+    {% if profile.user.last_name %}
+        <p class="mb-4"><strong>Sobrenome:</strong> {{ profile.user.last_name }}</p>
+    {% endif %}
+
+    {% if profile.cpf %}
+        <p class="mb-4"><strong>CPF:</strong> {{ profile.cpf }}</p>
+    {% endif %}
+
+    {% if profile.description %}
+        <p class="mb-4"><strong>Biografia:</strong> {{ profile.description }}</p>
+    {% endif %}
+</div>
+
+{% endblock content %}
