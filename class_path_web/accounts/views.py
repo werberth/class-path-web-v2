@@ -81,6 +81,7 @@ def update_teacher(request, pk):
 @transaction.atomic
 @login_required
 def update_profile(request):
+    success_url = r('accounts:profile')
     template_name = 'accounts/profile_form.html'
 
     if request.user.has_perm('accounts.is_admin'):
@@ -653,6 +654,20 @@ class ProfileView(generic.DetailView):
             return user.student
 
 
+@method_decorator(login_required, name='dispatch')
+class CreateAddress(base_core_views.BaseFormView, generic.CreateView):
+    form_class = forms.AddressForm
+    success_url = r('accounts:profile')
+    template_title = 'Adicionar Endereço'
+    template_name = 'accounts/address/address_form.html'
+
+    def form_valid(self, form):
+        address = form.save(commit=False)
+        address.user = self.request.user
+        self.object = address.save()
+        return super().form_valid(form)
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -660,6 +675,7 @@ create_class = CreateClass.as_view()
 create_teacher = CreateTeacher.as_view()
 create_student = CreateStudent.as_view()
 create_course = CreateCourse.as_view()
+create_address = CreateAddress.as_view()
 # update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()

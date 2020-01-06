@@ -53,6 +53,16 @@ class ProfileForm(ModelForm):
         )
 
 
+class AddressForm(ModelForm):
+    class Meta:
+        model = models.Address
+        fields = (
+            'state', 'city', 'street',
+            'neighborhood', 'number',
+            'postal_code', 'complement'
+        )
+
+
 class ProgramForm(ModelForm):
     class Meta:
         model = models.Program

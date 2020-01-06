@@ -24,12 +24,59 @@
     {% endif %}
 
     {% if profile.cpf %}
-        <p class="mb-4"><strong>CPF:</strong> {{ profile.cpf }}</p>
+        <p class="mb-4"><strong>CPF:</strong> {{ profile.cpf|upper }}</p>
     {% endif %}
 
     {% if profile.description %}
         <p class="mb-4"><strong>Biografia:</strong> {{ profile.description }}</p>
     {% endif %}
+
+    <hr>
+
+    {% with user.addresses.all as addresses %}
+        {% if addresses %}
+            <h4> Endereços </h5>
+            <p>
+                <h5>
+                    <i class="fas fa-plus-circle"></i>
+                    <a href="{% url 'accounts:create_address' %}">Adicionar um novo Endereço</a>
+                </h5>
+            </p>
+
+            <div class="row justify-content-left">
+                {% for address in addresses %}
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-warning home-cards shadow h-200 py-3">
+                            <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="font-weight-bold mb-1">
+                                        <p>Street: {{ address.street }}</p>
+                                        <p>Number: {{ address.number }}</p>
+                                        <p>Neighborhood: {{ address.neighborhood }}</p>
+                                        {% if address.complement %}
+                                            <p>Complement: {{ address.complement }}</p>
+                                        {% endif %}
+                                        <p>City: {{ address.city }}</p>
+                                        <p>State: {{ address.state }}</p>
+                                        <p>Postal Code: {{ address.postal_code }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>
+                <h5>
+                    <i class="fas fa-plus-circle"></i>
+                    <a href="{% url 'accounts:create_address' %}">Adicionar Endereço</a>
+                </h5>
+            </p>
+        {% endif %}
+    {% endwith %}
 </div>
 
 {% endblock content %}
