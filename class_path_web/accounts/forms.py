@@ -45,7 +45,7 @@ class CustomUserUpdateForm(ModelForm):
         )
 
 
-class TeacherForm(ModelForm):
+class ProfileForm(ModelForm):
     class Meta:
         model = models.Teacher
         fields = (

@@ -60,7 +60,7 @@ def update_teacher(request, pk):
         request.POST or None,
         instance=teacher.user
     )
-    teacher_form = forms.TeacherForm(
+    teacher_form = forms.ProfileForm(
         request.POST or None,
         instance=teacher
     )
@@ -76,6 +76,40 @@ def update_teacher(request, pk):
         'template_title': template_title,
     }
     return render(request, template_name, context)
+
+
+@transaction.atomic
+@login_required
+def update_profile(request):
+    template_name = 'accounts/profile_form.html'
+
+    if request.user.has_perm('accounts.is_admin'):
+        profile = request.user.admin
+    elif request.user.has_perm('accounts.is_teacher'):
+        profile = request.user.teacher
+    elif request.user.has_perm('accounts.is_student'):
+        profile = request.user.student
+
+    user_form = forms.CustomUserUpdateForm(
+        request.POST or None,
+        instance=profile.user
+    )
+    profile_form = forms.ProfileForm(
+        request.POST or None,
+        instance=profile
+    )
+
+    if user_form.is_valid() and profile_form.is_valid():
+        user_form.save()
+        profile_form.save()
+        return redirect(success_url)
+
+    context = {
+        'form': user_form,
+        'profile_form': profile_form,
+    }
+    return render(request, template_name, context)
+
 
 @transaction.atomic
 @login_required
@@ -95,7 +129,7 @@ def update_student(request, pk):
         request.POST or None,
         instance=student.user
     )
-    student_form = forms.TeacherForm(
+    student_form = forms.ProfileForm(
         request.POST or None,
         instance=student
     )

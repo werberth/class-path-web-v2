@@ -28,6 +28,7 @@ urlpatterns = [
     path('update_class/<int:pk>/', views.update_class, name='update-class'),
     path('update-student/<int:pk>/', views.update_student, name='update-student'),
     path('update-course/<int:pk>/', views.update_course, name='update-course'),
+    path('update-profile/', views.update_profile, name='update_profile'),
     path(
         'define-scores/<int:student>/<int:course>/',
         views.define_scores,
