@@ -21,7 +21,7 @@ class Content(models.Model):
         related_name="contents",
         null=True
     )
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -51,7 +51,7 @@ class Activity(models.Model):
         null=True
     )
     multimedia_required = models.BooleanField(default=False)
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -87,7 +87,7 @@ class ActivityAnswer(models.Model):
         on_delete=models.CASCADE,
         related_name="answers"
     )
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:

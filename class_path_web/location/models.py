@@ -13,7 +13,7 @@ class Location(models.Model):
     description = models.TextField(blank=True, null=True)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
  
     class Meta:
