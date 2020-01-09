@@ -11,5 +11,5 @@ urlpatterns = [
     path('delete-content/<int:pk>/', views.delete_content, name='delete-content'),
     path('delete-activity/<int:pk>/', views.delete_activity, name='delete-activity'),
     path('list-content/', views.list_content, name='list-content'),
-    path('list_activity/', views.list_activity, name='list-activity')
+    path('list-activity/', views.list_activity, name='list-activity')
 ]

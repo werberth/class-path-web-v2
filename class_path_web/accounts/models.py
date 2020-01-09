@@ -17,7 +17,8 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     is_teacher = models.BooleanField(_('is teacher'), default=False)
     is_student = models.BooleanField(_('is student'), default=False)
-    is_admin = models.BooleanField(_('is_admin'), default=True)
+    is_admin = models.BooleanField(_('is_admin'), default=False)
+
     objects = CustomUserManager()
 
     username = None
