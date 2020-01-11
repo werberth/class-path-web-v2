@@ -50,12 +50,12 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="{{ form.class_id.auto_id }}">Class:</label><br>
-                    {% if form.class_id.errors %}
-                        {% render_field form.class_id class="selectpicker form-control is-invalid" data-live-search="true" %}
-                        {{ form.class_id.errors|striptags }}
+                    <label for="{{ form.course.auto_id }}">Class:</label><br>
+                    {% if form.course.errors %}
+                        {% render_field form.course class="selectpicker form-control is-invalid" data-live-search="true" %}
+                        {{ form.course.errors|striptags }}
                     {% else %}
-                        {% render_field form.class_id class="selectpicker form-control" data-live-search="true" %}
+                        {% render_field form.course class="selectpicker form-control" data-live-search="true" %}
                     {% endif %}
                 </div>
                 <div class="form-check">
