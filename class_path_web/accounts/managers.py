@@ -23,13 +23,22 @@ class CustomUserManager(UserManager):
 
     def define_permissions(self, instance):
         content_type = ContentType.objects.get_for_model(instance)
-        if instance.has_institution:
+        if not instance.has_institution:
             permission_has_institution, _ = Permission.objects.get_or_create(
-                codename='has_institution',
-                name='Has institution',
+                codename='has_no_institution',
+                name='Has no institution',
                 content_type=content_type,
             )
-            instance.user_permissions.add(permission_is_student.id)
+            instance.user_permissions.add(permission_has_institution.id)
+
+        if not instance.has_institution or instance.is_admin:
+            can_edit_class_and_student, _ = Permission.objects.get_or_create(
+                codename='can_edit_class_and_student',
+                name='Can edit class and student',
+                content_type=content_type,
+            )
+            instance.user_permissions.add(can_edit_class_and_student.id)
+
         if instance.is_student:
             permission_is_student, _ = Permission.objects.get_or_create(
                 codename='is_student',
