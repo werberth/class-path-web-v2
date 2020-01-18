@@ -114,7 +114,7 @@ def update_profile(request):
 
 @transaction.atomic
 @login_required
-@permission_required('accounts.is_admin')
+@permission_required('accounts.can_edit_class_and_student')
 def update_student(request, pk):
     template_title = 'Editar Student'
     template_name = 'accounts/student/student_form.html'
@@ -195,43 +195,25 @@ class CreateTeacher(base_core_views.BaseFormView, generic.CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
-class CreateStudent(base_core_views.BaseFormView, generic.CreateView):
+@method_decorator(permission_required('accounts.can_edit_class_and_student'), name='dispatch')
+class CreateStudent(base_core_views.BaseFormView, base_views.ListStudentBase, generic.CreateView):
     form_class = forms.CustomUserCreationForm
     template_title = 'Criar Estudante'
     template_name = 'accounts/student/student_form.html'
 
-    @property
-    def _class(self):
-        institution = self.request.user.admin.institution
-        programs = institution.programs.values_list('id', flat=True)
-        class_instance = get_object_or_404(
-            models.Class,
-            pk=self.kwargs['class'],
-            program__in=programs
-        )
-        return class_instance
-
     @transaction.atomic
     def form_valid(self, form):
-        institution = self.request.user.admin.institution
-
         form.cleaned_data['is_student'] = True
         self.object = form.save()
 
         student = models.Student.objects.create(
             user=self.object,
-            class_id=self._class
+            class_id=self.class_instance
         )
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_context_data(self,**kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['class'] = self._class
-        return kwargs
-
     def get_success_url(self):
-        url = r('accounts:list-student', kwargs={'class': self._class.id})
+        url = r('accounts:list-student', kwargs={'class': self.class_instance.id})
         return url
 
 
@@ -309,18 +291,9 @@ class CreateCourse(base_core_views.BaseFormView, generic.CreateView):
 # List Views
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+@method_decorator(permission_required('accounts.can_edit_class_and_student'), name='dispatch')
 class ListStudent(base_views.ListStudentBase, generic.ListView):
-
-    def get_object(self, queryset=None):
-        institution = self.request.user.admin.institution
-        program_ids = institution.programs.values_list('id', flat=True)
-        _class = get_object_or_404(
-            models.Class,
-            pk=self.kwargs['class'],
-            program__in=program_ids
-        )
-        return _class
+    pass
 
 
 @method_decorator(login_required, name='dispatch')
@@ -526,7 +499,7 @@ class DeleteTeacherView(base_core_views.BaseDelete):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+@method_decorator(permission_required('accounts.can_edit_class_and_student'), name='dispatch')
 class DeleteStudentView(base_core_views.BaseDelete):
 
     def get_queryset(self):
