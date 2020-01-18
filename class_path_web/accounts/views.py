@@ -672,7 +672,7 @@ class DeleteAddressView(base_core_views.BaseDelete):
 
 
 class SignUpTeacher(generic.CreateView):
-    success_url = r('accounts:teacher-create-class')
+    success_url = r('accounts:login')
     form_class = forms.CustomUserCreationForm
     template_name = 'accounts/signup.html'
 
