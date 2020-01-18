@@ -194,25 +194,6 @@ class CreateTeacher(base_core_views.BaseFormView, generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class SignUpTeacher(generic.CreateView):
-    success_url = r('accounts:login')
-    form_class = forms.CustomUserCreationForm
-    template_name = 'accounts/signup.html'
-
-    @transaction.atomic
-    def form_valid(self, form):
-        form.cleaned_data['has_institution'] = False
-        self.object = form.save()
-
-        teacher = models.Teacher.objects.create(user=self.object)
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_context_data(self,**kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['user_form'] = self.form_class()
-        return kwargs
-
-
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateStudent(base_core_views.BaseFormView, generic.CreateView):
@@ -427,7 +408,7 @@ class UpdateProgram(
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+@method_decorator(permission_required('accounts.can_edit_class_and_student'), name='dispatch')
 class UpdateClass(base_core_views.BaseFormView, generic.UpdateView):
     form_class = forms.ClassForm
     template_title = 'Editar Turma'
@@ -435,13 +416,17 @@ class UpdateClass(base_core_views.BaseFormView, generic.UpdateView):
     context_object_name = 'class'
 
     def get_queryset(self):
-        programs = self.request.user.admin.institution.programs.all()
-        classes = models.Class.objects.filter(program__in=programs)
-        return classes
+        if self.request.user.has_institution:
+            programs = self.request.user.admin.institution.programs.all()
+            classes = models.Class.objects.filter(program__in=programs)
+            return classes
+        return self.request.user.teacher.classes.all()
 
     def get_success_url(self):
-        url = r('accounts:list-class', kwargs={'program': self.object.program.id})
-        return url
+        if self.request.user.has_institution:
+            return r('accounts:list-class',
+                kwargs={'program': self.object.program.id})
+        return r('accounts:teacher-classes')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -479,6 +464,7 @@ class DeleteProgramView(base_core_views.BaseDelete):
         programs = self.request.user.admin.institution.programs.all()
         return programs
 
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class DeleteCourseView(base_core_views.BaseDelete):
@@ -500,17 +486,21 @@ class DeleteCourseView(base_core_views.BaseDelete):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('accounts.is_admin'), name='dispatch')
+@method_decorator(permission_required('accounts.can_edit_class_and_student'), name='dispatch')
 class DeleteClassView(base_core_views.BaseDelete):
 
     def get_queryset(self):
-        institution = self.request.user.admin.institution
-        programs = institution.programs.all()
-        return models.Class.objects.filter(program__in=programs)
+        if self.request.user.has_institution:
+            institution = self.request.user.admin.institution
+            programs = institution.programs.all()
+            return models.Class.objects.filter(program__in=programs)
+        return self.request.user.teacher.classes.all()
 
     def get_success_url(self):
-        url = r('accounts:list-class', kwargs={'program': self.object.program.id})
-        return url
+        if self.request.user.has_institution:
+            return r('accounts:list-class',
+                kwargs={'program': self.object.program.id})
+        return r('accounts:teacher-classes')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -686,6 +676,7 @@ class CreateAddress(base_core_views.BaseFormView, generic.CreateView):
         self.object = address.save()
         return super().form_valid(form)
 
+
 class UpdateAddressView(base_core_views.BaseFormView, generic.UpdateView):
     form_class = forms.AddressForm
     success_url = r('accounts:profile')
@@ -706,6 +697,51 @@ class DeleteAddressView(base_core_views.BaseDelete):
         return addresses
 
 
+class SignUpTeacher(generic.CreateView):
+    success_url = r('accounts:teacher-create-class')
+    form_class = forms.CustomUserCreationForm
+    template_name = 'accounts/signup.html'
+
+    @transaction.atomic
+    def form_valid(self, form):
+        form.cleaned_data['is_teacher'] = True
+        form.cleaned_data['has_institution'] = False
+        self.object = form.save()
+
+        teacher = models.Teacher.objects.create(user=self.object)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['user_form'] = self.form_class()
+        return kwargs
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.has_no_institution'), name='dispatch')
+class CreateTeacherClass(base_core_views.BaseFormView, generic.CreateView):
+    form_class = forms.ClassForm
+    template_title = 'Criar Turma'
+    success_url = r('core:dashboard')
+    template_name = 'accounts/class/class_form.html'
+
+    def form_valid(self, form):
+        class_instance = form.save(commit=False)
+        class_instance.teacher = self.request.user.teacher
+        self.object = class_instance.save()
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('accounts.has_no_institution'), name='dispatch')
+class ListTeacherClasses(generic.ListView):
+    context_object_name = 'classes'
+    template_name = 'accounts/class/class_list.html'
+
+    def get_queryset(self):
+        return self.request.user.teacher.classes.all()
+
+
 # define CBVs as FBVs
 # create
 create_program = CreateProgram.as_view()
@@ -714,7 +750,6 @@ create_teacher = CreateTeacher.as_view()
 create_student = CreateStudent.as_view()
 create_course = CreateCourse.as_view()
 create_address = CreateAddress.as_view()
-sign_up_teacher = SignUpTeacher.as_view()
 # update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
@@ -738,3 +773,7 @@ delete_course = DeleteCourseView.as_view()
 delete_address = DeleteAddressView.as_view()
 # detail
 profile_view = ProfileView.as_view()
+# has no institution views
+sign_up_teacher = SignUpTeacher.as_view()
+create_teacher_class = CreateTeacherClass.as_view()
+teacher_classes = ListTeacherClasses.as_view()
