@@ -24,7 +24,12 @@ class ListStudentBase:
     @property
     def class_instance(self):
         if self.request.user.has_institution:
-            institution = self.request.user.admin.institution
+
+            if self.request.user.is_teacher:
+                institution = self.request.user.teacher.institution
+            else:
+                institution = self.request.user.admin.institution
+
             programs = institution.programs.values_list('id', flat=True)
             class_ = get_object_or_404(
                 models.Class,

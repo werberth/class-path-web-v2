@@ -82,7 +82,6 @@
                     {% endif %}
 
                     {% if perms.accounts.is_teacher and not perms.accounts.has_no_institution %}
-
                       {% with student|get_scores:course as scores %}
                         <td>
                           {{ scores.first_score|default_if_none:"---" }}
@@ -93,10 +92,9 @@
                         <td>
                           {{ scores.third_score|default_if_none:"---" }}
                         </td>
-                      {% endwith %}
-
+                    {% endwith %}
                       <td>
-                        <a
+                        <a href="{% url 'accounts:define-scores' course=course.id student=student.id %}"
                           class="btn btn-success btn-circle"
                           data-toggle="tooltip" data-placement="right" title="Editar notas do estudante">
                           <i class="fas fa-edit"></i>

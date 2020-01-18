@@ -60,11 +60,7 @@
                   <button class="btn btn-primary btn-user btn-block" type="submit">Salvar</button>
               </div>
               <div class="col-xl-2 float-right">
-                  {% if perms.accounts.has_no_institution %}
-                    <a class="btn btn-secondary btn-user btn-block" href="{% url 'accounts:list-student' class=class.id %}">Voltar</a>
-                  {% else %}
-                    <a class="btn btn-secondary btn-user btn-block" href="{% url 'accounts:teacher-students' %}">Voltar</a>
-                  {% endif %}
+                  <a class="btn btn-secondary btn-user btn-block" href="{% url 'accounts:list-student' class=class.id %}">Voltar</a>
               </div>
             </form>
         </div>

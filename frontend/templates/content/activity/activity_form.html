@@ -49,15 +49,27 @@
                         {% render_field form.location class="selectpicker form-control" data-live-search="true" %}
                     {% endif %}
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.course.auto_id }}">Class:</label><br>
-                    {% if form.course.errors %}
-                        {% render_field form.course class="selectpicker form-control is-invalid" data-live-search="true" %}
-                        {{ form.course.errors|striptags }}
-                    {% else %}
-                        {% render_field form.course class="selectpicker form-control" data-live-search="true" %}
-                    {% endif %}
-                </div>
+                {% if perms.accounts.has_no_institution %}
+                    <div class="form-group">
+                        <label for="{{ form.class.auto_id }}">Class:</label><br>
+                        {% if form.class_id.errors %}
+                            {% render_field form.class_id class="selectpicker form-control is-invalid" data-live-search="true" %}
+                            {{ form.class_id.errors|striptags }}
+                        {% else %}
+                            {% render_field form.class_id class="selectpicker form-control" data-live-search="true" %}
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="form-group">
+                        <label for="{{ form.course.auto_id }}">{{ form.course.label }}:</label><br>
+                        {% if form.course.errors %}
+                            {% render_field form.course class="selectpicker form-control is-invalid" data-live-search="true" %}
+                            {{ form.course.errors|striptags }}
+                        {% else %}
+                            {% render_field form.course class="selectpicker form-control" data-live-search="true" %}
+                        {% endif %}
+                    </div>
+                {% endif %}
                 <div class="form-check">
                     {% render_field form.multimedia_required class="form-check-input" %}
                     <label for="{{ form.multimedia_required.auto_id }}" class="form-check-label">

@@ -51,10 +51,17 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
             <div class="text-md-center font-weight-bold text-primary text-uppercase mb-1">
-              <a class="stretched-link"  href="{% url 'accounts:list-teacher-courses' %}">
-                  Disciplinas
-                <i class="fas fa-fw fa-chalkboard fa-2x text-primary"></i>
-              </a>
+              {% if perms.accounts.has_no_institution %}
+                <a class="stretched-link"  href="{% url 'accounts:teacher-classes' %}">
+                  Turmas
+                  <i class="fas fa-fw fa-graduation-cap fa-2x text-primary"></i>
+                </a>
+              {% else %}
+                <a class="stretched-link"  href="{% url 'accounts:list-teacher-courses' %}">
+                    Disciplinas
+                  <i class="fas fa-fw fa-chalkboard fa-2x text-primary"></i>
+                </a>
+              {% endif %}
             </div>
           </div>
         </div>

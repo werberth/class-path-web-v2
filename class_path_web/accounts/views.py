@@ -552,7 +552,8 @@ class ListClassStudents(base_views.ListStudentBase, generic.ListView):
         )
         return course
 
-    def get_object(self, queryset=None):
+    @property
+    def class_instance(self):
         return self.course.class_id
 
     def get_context_data(self,**kwargs):
