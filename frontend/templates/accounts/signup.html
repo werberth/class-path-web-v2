@@ -22,25 +22,29 @@
             </div>
             <form action="" method="POST">
               {% csrf_token %}
-              <div class="text-center form-header">
-                <h4>Informações da Instituição</h4>
-              </div>
-              <div class="form-group">
-                {% if institution_form.name.errors %}
-                  {% render_field institution_form.name class="form-control form-control-user is-invalid" placeholder=institution_form.name.label %}
-                  {{ institution_form.name.errors|striptags }}
-                {% else %}
-                  {% render_field institution_form.name class="form-control form-control-user" placeholder=institution_form.name.label %}
-                {% endif %}
-              </div>
-              <div class="form-group">
-                {% if institution_form.description.errors %}
-                  {% render_field institution_form.description class="form-control is-invalid" placeholder=institution_form.description.label %}
-                  {{ institution_form.description.errors|striptags }}
-                {% else %}
-                  {% render_field institution_form.description class="form-control" placeholder=institution_form.description.label %}
-                {% endif %}
-              </div>
+
+              {% if institution_form %}
+                <div class="text-center form-header">
+                  <h4>Informações da Instituição</h4>
+                </div>
+                <div class="form-group">
+                  {% if institution_form.name.errors %}
+                    {% render_field institution_form.name class="form-control form-control-user is-invalid" placeholder=institution_form.name.label %}
+                    {{ institution_form.name.errors|striptags }}
+                  {% else %}
+                    {% render_field institution_form.name class="form-control form-control-user" placeholder=institution_form.name.label %}
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  {% if institution_form.description.errors %}
+                    {% render_field institution_form.description class="form-control is-invalid" placeholder=institution_form.description.label %}
+                    {{ institution_form.description.errors|striptags }}
+                  {% else %}
+                    {% render_field institution_form.description class="form-control" placeholder=institution_form.description.label %}
+                  {% endif %}
+                </div>
+              {% endif %}
+
               <div class="text-center form-header">
                 <h4>Informações do Usuário</h4>
               </div>
@@ -109,13 +113,6 @@
             <div class="text-center">
               <a class="small" href="{% url 'core:home' %}">Voltar a Pagina Inicial</a>
             </div>
-            <!-- <hr>
-            <div class="text-center">
-              <a class="small" href="forgot-password.html">Forgot Password?</a>
-            </div>
-            <div class="text-center">
-              <a class="small" href="login.html">Already have an account? Login!</a>
-            </div> -->
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path('api/', include(('class_path_web.accounts.api.urls', 'core'), namespace="core")),
     path('sign-up/', views.signup, name='sign-up'),
+    path('teacher/sign-up/', views.sign_up_teacher, name='teacher-sign-up'),
     path('logout/', auth_views.LogoutView.as_view(), name="logout"),
     path(
         'login/',

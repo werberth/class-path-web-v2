@@ -194,6 +194,25 @@ class CreateTeacher(base_core_views.BaseFormView, generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+class SignUpTeacher(generic.CreateView):
+    success_url = r('accounts:login')
+    form_class = forms.CustomUserCreationForm
+    template_name = 'accounts/signup.html'
+
+    @transaction.atomic
+    def form_valid(self, form):
+        form.cleaned_data['has_institution'] = False
+        self.object = form.save()
+
+        teacher = models.Teacher.objects.create(user=self.object)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self,**kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['user_form'] = self.form_class()
+        return kwargs
+
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(permission_required('accounts.is_admin'), name='dispatch')
 class CreateStudent(base_core_views.BaseFormView, generic.CreateView):
@@ -695,6 +714,7 @@ create_teacher = CreateTeacher.as_view()
 create_student = CreateStudent.as_view()
 create_course = CreateCourse.as_view()
 create_address = CreateAddress.as_view()
+sign_up_teacher = SignUpTeacher.as_view()
 # update
 update_program = UpdateProgram.as_view()
 update_class = UpdateClass.as_view()
