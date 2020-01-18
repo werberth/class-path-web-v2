@@ -107,13 +107,13 @@ class Class(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     program = models.ForeignKey(
-        Teacher,
+        Program,
         on_delete=models.CASCADE,
         related_name="classes",
         null=True
     )
     teacher = models.ForeignKey(
-        Program,
+        Teacher,
         on_delete=models.CASCADE,
         related_name="classes",
         null=True
